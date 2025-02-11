@@ -1,5 +1,5 @@
 <template>
-    <header class="bg-gray-100 p-4 flex items-center space-x-4">
+    <header class="p-4 flex items-center space-x-4 border-b border-gray-300">
         <img
             v-if="user && user.photo_url"
             :src="user.photo_url"
