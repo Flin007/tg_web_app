@@ -1,12 +1,22 @@
 <script setup>
 import {getCurrentInstance, ref, onMounted } from 'vue';
+import Header from "../Components/Home/Header.vue";
 //Рзрешаем доступ к сайту только если юзер зашел через web app tg
 const accessDenied = ref(false);
 //Телеграм web app
 const {$tg} = getCurrentInstance().appContext.config.globalProperties
+//Наш юзер
+const user = ref(null);
 //Проверяем доступ при отрисовке
 onMounted(() => {
-    accessDenied.value = !($tg && $tg.initDataUnsafe && $tg.initDataUnsafe.user);
+    if ($tg && $tg.initDataUnsafe && $tg.initDataUnsafe.user) {
+        user.value = $tg.initDataUnsafe.user;
+        accessDenied.value = false
+    } else {
+        accessDenied.value = true
+    }
+    //TODO: убрать
+    console.log($tg.initDataUnsafe.user)
 });
 
 </script>
@@ -43,7 +53,8 @@ onMounted(() => {
 
     <!-- Тут уже отрисуем основное приложение -->
     <div v-else>
-        <h1>Hello world</h1>
+        <Header :user="user" />
+        <h1 class="text-center">Hello world ёпта</h1>
     </div>
 
 </template>
