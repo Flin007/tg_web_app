@@ -5,19 +5,10 @@
 </template>
 
 <script setup>
-import {ref, onMounted} from 'vue';
-
-const title = ref(null);
-
-onMounted(async () => {
-    try {
-        const response = await fetch('/api/content/home-title');
-        if (response.ok) {
-            const data = await response.json();
-            title.value = data.value;
-        }
-    } catch (error) {
-        console.error('Error fetching content settings:', error);
-    }
+defineProps({
+    title: {
+        type: String,
+        required: true,
+    },
 });
 </script>

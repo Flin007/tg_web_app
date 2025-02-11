@@ -8,16 +8,36 @@ const accessDenied = ref(false);
 const {$tg} = getCurrentInstance().appContext.config.globalProperties
 //Наш юзер
 const user = ref(null);
-//Проверяем доступ при отрисовке
-onMounted(() => {
+//Индикатор готовности страницы
+const isReady = ref(false);
+//Динамический компонент с таекстом на главной
+const homeTitleData = ref(null);
+
+onMounted(async () => {
+    // Получаем данные пользователя из TelegramWebApp
     if ($tg && $tg.initDataUnsafe && $tg.initDataUnsafe.user) {
         user.value = $tg.initDataUnsafe.user;
         accessDenied.value = false
     } else {
+        //Если ничего не получили, возвращаемся
         accessDenied.value = true
+        return;
     }
-    //TODO: убрать
-    console.log($tg.initDataUnsafe.user)
+
+    // Загружаем данные для HomeTitle
+    try {
+        const response = await fetch('/api/content/home-title');
+        if (response.ok) {
+            const data = await response.json();
+            homeTitleData.value = data;
+        }
+    } catch (error) {
+        console.error('Error fetching HomeTitle data:', error);
+    }
+
+    // Устанавливаем флаг готовности после завершения всех операций
+    //TODO: замутить preloader
+    isReady.value = true;
 });
 
 </script>
@@ -53,9 +73,9 @@ onMounted(() => {
     </div>
 
     <!-- Тут уже отрисуем основное приложение -->
-    <div v-else>
+    <div v-else  v-if="isReady">
         <Header :user="user" />
-        <HomeTitle/>
+        <HomeTitle v-if="homeTitleData" :title="homeTitleData.value" />
         <h1 class="text-center">Hello world ёпта</h1>
     </div>
 
