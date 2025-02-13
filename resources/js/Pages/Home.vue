@@ -1,7 +1,8 @@
 <script setup>
-import {getCurrentInstance, ref, onMounted } from 'vue';
+import {getCurrentInstance, onMounted, ref} from 'vue';
 import Header from "../Components/Home/Header.vue";
 import HomeTitle from "../Components/Home/HomeTitle.vue";
+import Car from '../Components/Home/Car.vue';
 //Рзрешаем доступ к сайту только если юзер зашел через web app tg
 const accessDenied = ref(false);
 //Телеграм web app
@@ -12,6 +13,13 @@ const user = ref(null);
 const isReady = ref(false);
 //Динамический компонент с таекстом на главной
 const homeTitleData = ref(null);
+// Используем defineProps для получения данных, переданных от сервера
+const props = defineProps({
+    cars: {
+        type: Array,
+        default: () => []
+    }
+});
 
 onMounted(async () => {
     // Получаем данные пользователя из TelegramWebApp
@@ -28,15 +36,13 @@ onMounted(async () => {
     try {
         const response = await fetch('/api/content/home-title');
         if (response.ok) {
-            const data = await response.json();
-            homeTitleData.value = data;
+            homeTitleData.value = await response.json();
         }
     } catch (error) {
         console.error('Error fetching HomeTitle data:', error);
     }
 
     // Устанавливаем флаг готовности после завершения всех операций
-    //TODO: замутить preloader
     isReady.value = true;
 });
 
@@ -44,7 +50,7 @@ onMounted(async () => {
 
 <template>
     <!-- preloader -->
-    <div v-if="!isReady" class="fixed flex items-center justify-center w-full h-full bg-white">
+    <div v-if="!isReady" class="fixed flex items-center justify-center w-full h-full bg-white z-10">
         <span class="spinner"></span>
     </div>
 
@@ -82,18 +88,22 @@ onMounted(async () => {
     <div v-else  v-if="isReady">
         <Header :user="user" />
         <HomeTitle v-if="homeTitleData" :title="homeTitleData.value" />
-        <h1 class="text-center">Hello world ёпта</h1>
+        <!-- Отображение автомобилей с использованием компонента Car -->
+        <Car v-for="car in cars" :key="car.id" :data="car"/>
     </div>
 
 </template>
 
 <style>
+html{
+    background-color: #f3f4f6;
+}
 .spinner {
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background: radial-gradient(farthest-side,#474bff 94%,#0000) top/9px 9px no-repeat,
-    conic-gradient(#0000 30%,#474bff);
+    background: radial-gradient(farthest-side,#007aff 94%,#0000) top/9px 9px no-repeat,
+    conic-gradient(#0000 30%,#007aff);
     -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 9px),#000 0);
     animation: spinner-c7wet2 1s infinite linear;
 }
