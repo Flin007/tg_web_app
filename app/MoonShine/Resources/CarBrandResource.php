@@ -7,6 +7,7 @@ namespace App\MoonShine\Resources;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CarBrand;
 
+use MoonShine\Laravel\Fields\Slug;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\Checkbox;
@@ -23,7 +24,7 @@ class CarBrandResource extends ModelResource
 {
     protected string $model = CarBrand::class;
 
-    protected string $title = 'Бренды авто';
+    protected string $title = 'Бренды';
 
     /**
      * @return list<FieldContract>
@@ -33,6 +34,7 @@ class CarBrandResource extends ModelResource
         return [
             ID::make()->sortable(),
             Text::make('Название', 'name'),
+            Slug::make('Slug', 'slug'),
             Image::make('Логотип', 'logo_path'),
             Checkbox::make('Включен?', 'is_active'),
         ];
@@ -46,9 +48,22 @@ class CarBrandResource extends ModelResource
         return [
             Box::make([
                 ID::make()->sortable(),
-                Text::make('Название', 'name'),
-                Image::make('Логотип', 'logo_path'),
-                Checkbox::make('Включен?', 'is_active'),
+                Text::make('Название', 'name')
+                    ->required()
+                    ->reactive(null, false, 1000, 0)
+                    ->hint('Название бренда, должно быть уникальным'),
+                Slug::make('Slug', 'slug')
+                    ->locale('en')
+                    ->from('name')
+                    ->live()
+                    ->required()
+                    ->hint('Уникальная строка для url, генерируется сама от заданного названия. Можете указать свою.'),
+                Image::make('Логотип', 'logo_path')
+                    ->nullable()
+                    ->hint('Логотип бренда'),
+                Checkbox::make('Включен?', 'is_active')
+                    ->hint('Статус, будет ли отображаться бренд')
+                    ->default(true),
             ])
         ];
     }
@@ -61,6 +76,7 @@ class CarBrandResource extends ModelResource
         return [
             ID::make()->sortable(),
             Text::make('Название', 'name'),
+            Slug::make('Slug', 'slug'),
             Image::make('Логотип', 'logo_path'),
             Checkbox::make('Включен?', 'is_active'),
         ];
