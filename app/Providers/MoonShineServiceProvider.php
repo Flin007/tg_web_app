@@ -13,6 +13,7 @@ use App\MoonShine\Resources\MoonShineUserResource;
 use App\MoonShine\Resources\MoonShineUserRoleResource;
 use App\MoonShine\Resources\CarBrandResource;
 use App\MoonShine\Resources\CarCityResource;
+use App\MoonShine\Resources\CarModelResource;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -31,6 +32,7 @@ class MoonShineServiceProvider extends ServiceProvider
                 MoonShineUserRoleResource::class,
                 CarBrandResource::class,
                 CarCityResource::class,
+                CarModelResource::class,
             ])
             ->pages([
                 ...$config->getPages(),
