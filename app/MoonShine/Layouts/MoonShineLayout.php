@@ -32,6 +32,7 @@ use MoonShine\UI\Components\{Breadcrumbs,
     When};
 use App\MoonShine\Resources\CarBrandResource;
 use MoonShine\MenuManager\MenuItem;
+use App\MoonShine\Resources\CarCityResource;
 
 final class MoonShineLayout extends AppLayout
 {
@@ -46,7 +47,8 @@ final class MoonShineLayout extends AppLayout
     {
         return [
             ...parent::menu(),
-            MenuItem::make('Бренды авто', CarBrandResource::class),
+            MenuItem::make('Бренды', CarBrandResource::class),
+            MenuItem::make('Города', CarCityResource::class),
         ];
     }
 
