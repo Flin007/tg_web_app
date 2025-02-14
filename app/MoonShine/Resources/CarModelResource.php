@@ -7,10 +7,12 @@ namespace App\MoonShine\Resources;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CarModel;
 
+use MoonShine\Laravel\Enums\Action;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Laravel\Fields\Relationships\HasOne;
 use MoonShine\Laravel\Fields\Slug;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\Checkbox;
 use MoonShine\UI\Fields\ID;
@@ -109,5 +111,16 @@ class CarModelResource extends ModelResource
     protected function rules(mixed $item): array
     {
         return [];
+    }
+
+    /**
+     * Список возвращаемых кнопок, убираем просмотр
+     *
+     * @return ListOf
+     */
+    protected function activeActions(): ListOf
+    {
+        return parent::activeActions()
+            ->except(Action::VIEW);
     }
 }
