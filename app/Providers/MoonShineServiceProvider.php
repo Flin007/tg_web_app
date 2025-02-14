@@ -14,6 +14,7 @@ use App\MoonShine\Resources\MoonShineUserRoleResource;
 use App\MoonShine\Resources\CarBrandResource;
 use App\MoonShine\Resources\CarCityResource;
 use App\MoonShine\Resources\CarModelResource;
+use App\MoonShine\Resources\TelegramUserResource;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -33,6 +34,7 @@ class MoonShineServiceProvider extends ServiceProvider
                 CarBrandResource::class,
                 CarCityResource::class,
                 CarModelResource::class,
+                TelegramUserResource::class,
             ])
             ->pages([
                 ...$config->getPages(),
