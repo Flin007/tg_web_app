@@ -15,6 +15,7 @@ use MoonShine\UI\Fields\ID;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Fields\Image;
+use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Text;
 
 /**
@@ -35,6 +36,7 @@ class CarCityResource extends ModelResource
             ID::make()->sortable(),
             Text::make('Название', 'name'),
             Slug::make('Slug', 'slug'),
+            Number::make('Порядковый номре', 'sort_order'),
             Checkbox::make('Включен?', 'is_active'),
         ];
     }
@@ -53,6 +55,11 @@ class CarCityResource extends ModelResource
                 Slug::make('Slug', 'slug')
                     ->required()
                     ->hint('Сокращённый нейминг для url, например: msk, spb'),
+                Number::make('Порядковый номер', 'sort_order')
+                    ->buttons()
+                    ->min(0)
+                    ->default(0)
+                    ->hint('Очередность отображения, по умолчанию у всех 0'),
                 Checkbox::make('Включен?', 'is_active')
                     ->hint('Статус, будет ли отображаться город')
                     ->default(true),
@@ -69,6 +76,7 @@ class CarCityResource extends ModelResource
             ID::make()->sortable(),
             Text::make('Название', 'name'),
             Slug::make('Slug', 'slug'),
+            Number::make('Порядковый номре', 'sort_order'),
             Checkbox::make('Включен?', 'is_active'),
         ];
     }

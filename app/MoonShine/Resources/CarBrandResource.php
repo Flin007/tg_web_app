@@ -15,6 +15,7 @@ use MoonShine\UI\Fields\ID;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\UI\Fields\Image;
+use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Text;
 
 /**
@@ -36,6 +37,7 @@ class CarBrandResource extends ModelResource
             Text::make('Название', 'name'),
             Slug::make('Slug', 'slug'),
             Image::make('Логотип', 'logo_path'),
+            Number::make('Порядковый номре', 'sort_order'),
             Checkbox::make('Включен?', 'is_active'),
         ];
     }
@@ -61,6 +63,11 @@ class CarBrandResource extends ModelResource
                 Image::make('Логотип', 'logo_path')
                     ->nullable()
                     ->hint('Логотип бренда'),
+                Number::make('Порядковый номер', 'sort_order')
+                    ->buttons()
+                    ->min(0)
+                    ->default(0)
+                    ->hint('Очередность отображения, по умолчанию у всех 0'),
                 Checkbox::make('Включен?', 'is_active')
                     ->hint('Статус, будет ли отображаться бренд')
                     ->default(true),
@@ -78,6 +85,7 @@ class CarBrandResource extends ModelResource
             Text::make('Название', 'name'),
             Slug::make('Slug', 'slug'),
             Image::make('Логотип', 'logo_path'),
+            Number::make('Порядковый номре', 'sort_order'),
             Checkbox::make('Включен?', 'is_active'),
         ];
     }
