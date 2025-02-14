@@ -51,7 +51,7 @@ class CarCityResource extends ModelResource
                 ID::make()->sortable(),
                 Text::make('Название', 'name')
                     ->required()
-                    ->hint('Название город'),
+                    ->hint('Название города'),
                 Slug::make('Slug', 'slug')
                     ->required()
                     ->hint('Сокращённый нейминг для url, например: msk, spb'),
