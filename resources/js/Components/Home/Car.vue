@@ -19,7 +19,7 @@
         </div>
         <!-- Основной контент -->
         <div class="p-4">
-            <h2 class="text-3xl text-gray-800 font-light">{{ data.title }}</h2>
+            <h2 class="text-3xl text-gray-800 font-light">{{ data.title.length > 0 ? data.title : data.brand.name + ' ' + data.model.name }}</h2>
             <span class="text-gray-400">{{ data.trim }}, {{ data.year }}</span>
 
             <!-- Основные характеристики -->
