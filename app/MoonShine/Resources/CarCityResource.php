@@ -36,7 +36,7 @@ class CarCityResource extends ModelResource
             ID::make()->sortable(),
             Text::make('Название', 'name'),
             Slug::make('Slug', 'slug'),
-            Number::make('Порядковый номре', 'sort_order'),
+            Number::make('Порядковый номер', 'sort_order'),
             Checkbox::make('Статус', 'is_active'),
         ];
     }
@@ -76,7 +76,7 @@ class CarCityResource extends ModelResource
             ID::make()->sortable(),
             Text::make('Название', 'name'),
             Slug::make('Slug', 'slug'),
-            Number::make('Порядковый номре', 'sort_order'),
+            Number::make('Порядковый номер', 'sort_order'),
             Checkbox::make('Статус', 'is_active'),
         ];
     }

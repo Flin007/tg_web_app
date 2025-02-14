@@ -37,7 +37,7 @@ class CarBrandResource extends ModelResource
             Text::make('Название', 'name'),
             Slug::make('Slug', 'slug'),
             Image::make('Логотип', 'logo_path'),
-            Number::make('Порядковый номре', 'sort_order'),
+            Number::make('Порядковый номер', 'sort_order'),
             Checkbox::make('Статус', 'is_active'),
         ];
     }
@@ -85,7 +85,7 @@ class CarBrandResource extends ModelResource
             Text::make('Название', 'name'),
             Slug::make('Slug', 'slug'),
             Image::make('Логотип', 'logo_path'),
-            Number::make('Порядковый номре', 'sort_order'),
+            Number::make('Порядковый номер', 'sort_order'),
             Checkbox::make('Статус', 'is_active'),
         ];
     }
