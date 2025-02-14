@@ -37,7 +37,7 @@ class CarCityResource extends ModelResource
             Text::make('Название', 'name'),
             Slug::make('Slug', 'slug'),
             Number::make('Порядковый номре', 'sort_order'),
-            Checkbox::make('Включен?', 'is_active'),
+            Checkbox::make('Статус', 'is_active'),
         ];
     }
 
@@ -60,7 +60,7 @@ class CarCityResource extends ModelResource
                     ->min(0)
                     ->default(0)
                     ->hint('Очередность отображения, по умолчанию у всех 0'),
-                Checkbox::make('Включен?', 'is_active')
+                Checkbox::make('Статус', 'is_active')
                     ->hint('Статус, будет ли отображаться город')
                     ->default(true),
             ])
@@ -77,7 +77,7 @@ class CarCityResource extends ModelResource
             Text::make('Название', 'name'),
             Slug::make('Slug', 'slug'),
             Number::make('Порядковый номре', 'sort_order'),
-            Checkbox::make('Включен?', 'is_active'),
+            Checkbox::make('Статус', 'is_active'),
         ];
     }
 

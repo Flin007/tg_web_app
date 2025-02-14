@@ -38,7 +38,7 @@ class CarBrandResource extends ModelResource
             Slug::make('Slug', 'slug'),
             Image::make('Логотип', 'logo_path'),
             Number::make('Порядковый номре', 'sort_order'),
-            Checkbox::make('Включен?', 'is_active'),
+            Checkbox::make('Статус', 'is_active'),
         ];
     }
 
@@ -68,7 +68,7 @@ class CarBrandResource extends ModelResource
                     ->min(0)
                     ->default(0)
                     ->hint('Очередность отображения, по умолчанию у всех 0'),
-                Checkbox::make('Включен?', 'is_active')
+                Checkbox::make('Статус', 'is_active')
                     ->hint('Статус, будет ли отображаться бренд')
                     ->default(true),
             ])
@@ -86,7 +86,7 @@ class CarBrandResource extends ModelResource
             Slug::make('Slug', 'slug'),
             Image::make('Логотип', 'logo_path'),
             Number::make('Порядковый номре', 'sort_order'),
-            Checkbox::make('Включен?', 'is_active'),
+            Checkbox::make('Статус', 'is_active'),
         ];
     }
 
