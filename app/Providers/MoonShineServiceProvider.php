@@ -17,6 +17,7 @@ use App\MoonShine\Resources\CarModelResource;
 use App\MoonShine\Resources\TelegramUserResource;
 use App\MoonShine\Resources\CarColorResource;
 use App\MoonShine\Resources\CarResource;
+use App\MoonShine\Resources\CarPhotoResource;
 
 class MoonShineServiceProvider extends ServiceProvider
 {
@@ -39,6 +40,7 @@ class MoonShineServiceProvider extends ServiceProvider
                 TelegramUserResource::class,
                 CarColorResource::class,
                 CarResource::class,
+                CarPhotoResource::class,
             ])
             ->pages([
                 ...$config->getPages(),

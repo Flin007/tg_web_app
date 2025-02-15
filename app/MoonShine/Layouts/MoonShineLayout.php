@@ -40,6 +40,7 @@ use App\MoonShine\Resources\CarModelResource;
 use App\MoonShine\Resources\TelegramUserResource;
 use App\MoonShine\Resources\CarColorResource;
 use App\MoonShine\Resources\CarResource;
+use App\MoonShine\Resources\CarPhotoResource;
 
 final class MoonShineLayout extends AppLayout
 {
@@ -72,6 +73,7 @@ final class MoonShineLayout extends AppLayout
             MenuItem::make('Модели', CarModelResource::class),
             MenuItem::make('Цвета', CarColorResource::class),
             MenuItem::make('Машины', CarResource::class),
+            MenuItem::make('Фото', CarPhotoResource::class),
         ];
     }
 
