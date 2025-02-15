@@ -13,7 +13,15 @@ class HomeController
      */
     public function index(): Response
     {
-        $cars = Car::with(['brand', 'model', 'city', 'colors', 'photos'])->get();
+        $cars = Car::with([
+            'brand',
+            'model',
+            'city',
+            'colors',
+            'photos' => function ($query) {
+                $query->orderBy('sort_order');
+            }
+        ])->get();
         return Inertia::render('Home', [
             'cars' => $cars
         ]);
