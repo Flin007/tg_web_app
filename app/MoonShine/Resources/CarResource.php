@@ -150,7 +150,26 @@ class CarResource extends ModelResource
      */
     protected function rules(mixed $item): array
     {
-        return [];
+        return [
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'city_id' => 'required|exists:car_cities,id',
+            'brand_id' => 'required|exists:car_brands,id',
+            'model_id' => 'required|exists:car_models,id',
+            'year' => 'required|string|max:4',
+            'engine' => 'required|string|max:255',
+            'transmission' => 'required|string|max:255',
+            'drive' => 'required|string|max:255',
+            'trim' => 'required|string|max:255',
+            'interior' => 'required|string|max:255',
+            'vin' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'old_price' => 'nullable|numeric',
+            'is_available' => 'boolean',
+            // Валидация для поля colors (отношение BelongsToMany)
+            'colors' => 'required|array|max:2', // Ограничение до двух цветов
+            'colors.*' => 'exists:car_colors,id', // Проверка, что каждый выбранный цвет существует
+        ];
     }
 
     /**
