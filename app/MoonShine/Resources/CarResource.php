@@ -11,6 +11,7 @@ use App\Models\Car;
 
 use MoonShine\Laravel\Enums\Action;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
+use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\Layout\Box;
@@ -19,6 +20,7 @@ use MoonShine\UI\Fields\Field;
 use MoonShine\UI\Fields\ID;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\ComponentContract;
+use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Text;
 
 /**
@@ -82,7 +84,21 @@ class CarResource extends ModelResource
                     ->asyncOnInit()
                     ->required()
                     ->hint('Бренд авто, можно создать в меню Бренды'),
-                //TODO: Реализовать выбор цветов из модели CarColor и записывать в CalColorPivot
+                BelongsToMany::make(
+                    'Цвета',
+                    'colors', // Название отношения в модели Car
+                    'name', // Поле для отображения в списке выбора (из CarColor)
+                    resource: CarColorResource::class
+                )
+                    ->valuesQuery(fn(Builder $query, Field $field) => $query->where('is_active', true))
+                    ->fields([
+                        Number::make('Порядок сортировки', 'sort_order')
+                            ->default(0)
+                            ->hint('Чем меньше число, тем выше приоритет'),
+                    ])
+                    ->required()
+                    ->hint('Выберете до 2 цветов, если машина например Белая с чёрной крышей. Тогда Белый будет с порядковым числом 0, а черный 1, как доп. цвет'),
+                //TODO: добавить загрузку фото
                 Text::make('Год', 'year')
                     ->required()
                     ->hint('Пример: 2024'),
