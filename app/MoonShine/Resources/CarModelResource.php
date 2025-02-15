@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CarModel;
 
@@ -15,6 +16,7 @@ use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\Checkbox;
+use MoonShine\UI\Fields\Field;
 use MoonShine\UI\Fields\ID;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\ComponentContract;
@@ -69,7 +71,10 @@ class CarModelResource extends ModelResource
                     'brand',
                     'name',
                     resource: CarBrandResource::class
-                ),
+                )
+                    ->valuesQuery(fn(Builder $query, Field $field) => $query->where('is_active', true))
+                    ->required()
+                    ->hint('К какому бренду принадлежит модель, созда можно в меню Бренды'),
                 Number::make('Порядковый номер', 'sort_order')
                     ->buttons()
                     ->min(0)
