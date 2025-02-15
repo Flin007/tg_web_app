@@ -12,14 +12,18 @@ use App\Models\Car;
 use MoonShine\Laravel\Enums\Action;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
+use MoonShine\Laravel\Fields\Relationships\HasMany;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Support\ListOf;
+use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\Checkbox;
 use MoonShine\UI\Fields\Field;
+use MoonShine\UI\Fields\File;
 use MoonShine\UI\Fields\ID;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Contracts\UI\ComponentContract;
+use MoonShine\UI\Fields\Image;
 use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Text;
 
@@ -98,7 +102,13 @@ class CarResource extends ModelResource
                     ])
                     ->required()
                     ->hint('Выберете до 2 цветов, если машина например Белая с чёрной крышей. Тогда Белый будет с порядковым числом 0, а черный 1, как доп. цвет'),
-                //TODO: добавить загрузку фото
+                HasMany::make('Фотографии', 'photos', resource: CarPhotoResource::class)
+                    ->fields([
+                        Image::make('Фото', 'path'),
+                        Number::make('Порядок сортировки', 'sort_order')
+                    ])
+                    ->searchable(false) // отключает поле поиска
+                    ->creatable(),
                 Text::make('Год', 'year')
                     ->required()
                     ->hint('Пример: 2024'),
@@ -166,9 +176,6 @@ class CarResource extends ModelResource
             'price' => 'required|numeric',
             'old_price' => 'nullable|numeric',
             'is_available' => 'boolean',
-            // Валидация для поля colors (отношение BelongsToMany)
-            'colors' => 'required|array|max:2', // Ограничение до двух цветов
-            'colors.*' => 'exists:car_colors,id', // Проверка, что каждый выбранный цвет существует
         ];
     }
 
