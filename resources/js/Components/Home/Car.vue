@@ -18,7 +18,7 @@
             </swiper>
         </div>
         <!-- Основной контент -->
-        <div class="p-4">
+        <div class="p-4 relative">
             <h2 class="text-3xl text-gray-800 font-light">{{ data.title.length > 0 ? data.title : data.brand.name + ' ' + data.model.name }}</h2>
             <span class="text-gray-400">{{ data.trim }}, {{ data.year }}</span>
 
@@ -69,6 +69,9 @@
             >
                 Получить спецпредложение
             </a>
+
+            <!-- Id машины для удобства взаимодействия -->
+            <span class="absolute right-3 top-3 text-gray-300">#{{ data.id }}</span>
         </div>
     </div>
 </template>
