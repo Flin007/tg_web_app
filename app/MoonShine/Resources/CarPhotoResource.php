@@ -41,7 +41,7 @@ class CarPhotoResource extends ModelResource
             BelongsTo::make(
                 'Машина',
                 'car',
-                fn($item) => '#'.$item->id.', '.$item->title,
+                fn($item) => '#'.$item->id.', '.(empty($item->title) ? 'Без названия' : $item->title),
                 resource: CarBrandResource::class
             )
         ];
@@ -61,7 +61,7 @@ class CarPhotoResource extends ModelResource
                 BelongsTo::make(
                     'Машина',
                     'car',
-                    fn($item) => '#'.$item->id.', '.$item->title,
+                    fn($item) => '#'.$item->id.', '.(empty($item->title) ? 'Без названия' : $item->title),
                     resource: CarBrandResource::class
                 )
                     ->valuesQuery(fn(Builder $query, Field $field) => $query->where('is_available', true))
