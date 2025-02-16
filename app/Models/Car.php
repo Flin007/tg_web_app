@@ -102,4 +102,19 @@ class Car extends Model
         return $this->belongsToMany(CarColor::class, 'car_color', 'car_id', 'color_id')
             ->withPivot('sort_order');
     }
+
+    /**
+     * @param string $vin
+     *
+     * @return string
+     */
+    public static function maskVin(string $vin): string
+    {
+        if (strlen($vin) !== 17) {
+            return $vin; // Возвращаем исходный VIN, если длина не 17 символом
+        }
+
+        // Маскируем VIN
+        return substr($vin, 0, 7) . '*' . substr($vin, 8, 2) . '****' . substr($vin, -2);
+    }
 }

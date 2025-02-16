@@ -13,6 +13,7 @@ class HomeController
      */
     public function index(): Response
     {
+        //Получаем машины со всеми необходимиым данныеми
         $cars = Car::with([
             'brand',
             'model',
@@ -22,6 +23,14 @@ class HomeController
                 $query->orderBy('sort_order');
             }
         ])->get();
+
+        // Модифицируем VIN каждого автомобиля
+        $cars = $cars->map(function ($car) {
+            $car->vin = Car::maskVin($car->vin); // Используем статический метод
+            return $car;
+        });
+
+        //Рендерем вьюшку Home с пропсами машин
         return Inertia::render('Home', [
             'cars' => $cars
         ]);
