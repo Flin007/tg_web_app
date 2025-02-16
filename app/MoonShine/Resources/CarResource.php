@@ -43,7 +43,11 @@ class CarResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
-            Text::make('Название', 'title')
+            Text::make('Название', 'title', fn($item) => empty($item->title) ? 'Без названия' : $item->title),
+            Text::make('VIN', 'vin'),
+            Checkbox::make('Статус', 'is_available')
+                ->hint('Статус, будет ли отображаться модель')
+                ->default(true),
         ];
     }
 
