@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources;
 
+use App\Models\CarCity;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Car;
@@ -18,6 +19,8 @@ use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\Checkbox;
+use MoonShine\UI\Fields\Date;
+use MoonShine\UI\Fields\DateRange;
 use MoonShine\UI\Fields\Field;
 use MoonShine\UI\Fields\File;
 use MoonShine\UI\Fields\ID;
@@ -35,6 +38,25 @@ class CarResource extends ModelResource
     protected string $model = Car::class;
 
     protected string $title = 'Машины';
+
+    /**
+     * Фильтры для ресурса машин
+     *
+     * @return iterable
+     */
+    protected function filters(): iterable
+    {
+        return [
+            Text::make('Vin', 'vin'),
+            BelongsTo::make(
+                'Город',
+                'city',
+                formatted: static fn (CarCity $model) => $model->name,
+                resource: CarCityResource::class,
+            )
+                ->valuesQuery(static fn (Builder $q) => $q->select(['id', 'name'])),
+        ];
+    }
 
     /**
      * @return list<FieldContract>
