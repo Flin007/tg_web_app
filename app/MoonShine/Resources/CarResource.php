@@ -67,6 +67,18 @@ class CarResource extends ModelResource
             ID::make()->sortable(),
             Text::make('Название', 'title', fn($item) => empty($item->title) ? 'Без названия' : $item->title),
             Text::make('VIN', 'vin'),
+            BelongsTo::make(
+                'Город',
+                'city',
+                'name',
+                resource: CarCityResource::class
+            ),
+            BelongsTo::make(
+                'Бренд',
+                'brand',
+                'name',
+                resource: CarBrandResource::class
+            ),
             Checkbox::make('Статус', 'is_available')
                 ->hint('Статус, будет ли отображаться модель')
                 ->default(true),
