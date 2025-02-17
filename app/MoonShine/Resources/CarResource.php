@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources;
 
 use App\Models\CarCity;
+use App\Models\CarPhoto;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Car;
@@ -14,6 +15,7 @@ use MoonShine\Laravel\Enums\Action;
 use MoonShine\Laravel\Fields\Relationships\BelongsTo;
 use MoonShine\Laravel\Fields\Relationships\BelongsToMany;
 use MoonShine\Laravel\Fields\Relationships\HasMany;
+use MoonShine\Laravel\Fields\Relationships\HasOne;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\ActionButton;
@@ -65,6 +67,11 @@ class CarResource extends ModelResource
     {
         return [
             ID::make()->sortable(),
+            Image::make('Фото', 'image')
+                ->changeFill(function (Car $item) {
+                    $photo = $item->photos()->orderBy('sort_order')->first();
+                    return $photo ? $photo->path : '';
+                }),
             Text::make('Название', 'title', fn($item) => empty($item->title) ? 'Без названия' : $item->title),
             Text::make('VIN', 'vin'),
             BelongsTo::make(
