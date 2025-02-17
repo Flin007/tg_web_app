@@ -22,13 +22,15 @@ class HomeController
             'photos' => function ($query) {
                 $query->orderBy('sort_order');
             }
-        ])->get();
-
-        // Модифицируем VIN каждого автомобиля
-        $cars = $cars->map(function ($car) {
-            $car->vin = Car::maskVin($car->vin); // Используем статический метод
-            return $car;
-        });
+        ])
+            ->filter(request(Car::AVAILABLE_FILTERS))
+            ->where('is_available', true)
+            ->paginate(1)
+            ->withQueryString()
+            ->through(function ($car) {
+                $car->vin = Car::maskVin($car->vin); // Используем статический метод
+                return $car;
+            });
 
         //Рендерем вьюшку Home с пропсами машин
         return Inertia::render('Home', [

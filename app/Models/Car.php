@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -116,5 +117,23 @@ class Car extends Model
 
         // Маскируем VIN
         return substr($vin, 0, 7) . '*' . substr($vin, 8, 2) . '****' . substr($vin, -2);
+    }
+
+    public const AVAILABLE_FILTERS = ['city'];
+
+    /**
+     * Фильтруем машины по переданным параметрам
+     *
+     * @param Builder $query
+     * @param array $filters
+     *
+     * @return void
+     */
+    public function scopeFilter(Builder $query, array $filters): void
+    {
+        //Фильтруем city
+        if (isset($filters['country']['id']) ?? false) {
+            $query->where('country_id', $filters['country']['id']);
+        }
     }
 }

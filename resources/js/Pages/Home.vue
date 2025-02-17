@@ -14,6 +14,10 @@ const user = ref(null);
 const isReady = ref(false);
 //Динамический компонент с таекстом на главной
 const homeTitleData = ref(null);
+//Открыты ли фильтры
+const isFilterOpen = ref(false);
+//Есть ли ещё автомобили
+const isShowMoreButtonAvailable = ref(true);
 // Используем defineProps для получения данных, переданных от сервера
 const props = defineProps({
     cars: {
@@ -21,9 +25,6 @@ const props = defineProps({
         default: () => []
     }
 });
-
-//Открыты ли фильтры
-const isFilterOpen = ref(false);
 
 onMounted(async () => {
     // Получаем данные пользователя из TelegramWebApp
@@ -45,6 +46,9 @@ onMounted(async () => {
     } catch (error) {
         console.error('Error fetching HomeTitle data:', error);
     }
+
+    //Проверяем нужно ли показывать кнопку `Показать ещё`
+    isShowMoreButtonAvailable.value = props.cars.current_page < props.cars.last_page;
 
     // Устанавливаем флаг готовности после завершения всех операций
     isReady.value = true;
@@ -79,7 +83,7 @@ onMounted(async () => {
                     </div>
                     <div class="mt-5 sm:mt-6">
                         <a href="https://t.me/t3zusauto_bot"
-                           class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                           class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                         >
                             Перейти в бота
                         </a>
@@ -93,13 +97,21 @@ onMounted(async () => {
         <Header :user="user" />
         <HomeTitle v-if="homeTitleData" :title="homeTitleData.value" />
         <!-- Открытие фильтров -->
-        <span @click="isFilterOpen = !isFilterOpen" class="inline-flex text-gray-400 m-4">
+        <div class="m-4">
+            <span @click="isFilterOpen = !isFilterOpen" class="flex text-gray-400 max-w-[480px] mx-auto">
             <svg class="mr-2" fill="#9ca3af" width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M144 256v87.2l64 44V256 244l7.9-9L320 116V96H32v20l104.1 119 7.9 9v12zm-32 0L0 128V96 64H32 320h32V96v32L240 256V409.2 448l-32-22-96-66V256zM384 80h16 96 16v32H496 400 384V80zM336 240H496h16v32H496 336 320V240h16zm0 160H496h16v32H496 336 320V400h16z"/></svg>
             Показать фильтры
         </span>
+        </div>
         <Filter :open="isFilterOpen" />
         <!-- Отображение автомобилей с использованием компонента Car -->
-        <Car v-for="car in cars" :key="car.id" :data="car"/>
+        <Car v-for="car in cars.data" :key="car.id" :data="car"/>
+        <!-- Кнопка показать ещё -->
+        <div class="flex justify-center">
+            <button v-if="isShowMoreButtonAvailable" type="button" class="rounded-md bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                Показать ещё
+            </button>
+        </div>
     </div>
 
 </template>
