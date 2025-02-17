@@ -3,6 +3,7 @@ import {getCurrentInstance, onMounted, ref} from 'vue';
 import Header from "../Components/Home/Header.vue";
 import HomeTitle from "../Components/Home/HomeTitle.vue";
 import Car from '../Components/Home/Car.vue';
+import Filter from "../Components/Home/Filter.vue";
 //Рзрешаем доступ к сайту только если юзер зашел через web app tg
 const accessDenied = ref(false);
 //Телеграм web app
@@ -20,6 +21,9 @@ const props = defineProps({
         default: () => []
     }
 });
+
+//Открыты ли фильтры
+const isFilterOpen = ref(false);
 
 onMounted(async () => {
     // Получаем данные пользователя из TelegramWebApp
@@ -88,6 +92,12 @@ onMounted(async () => {
     <div v-else  v-if="isReady">
         <Header :user="user" />
         <HomeTitle v-if="homeTitleData" :title="homeTitleData.value" />
+        <!-- Открытие фильтров -->
+        <span @click="isFilterOpen = !isFilterOpen" class="inline-flex text-gray-400 m-4">
+            <svg class="mr-2" fill="#9ca3af" width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M144 256v87.2l64 44V256 244l7.9-9L320 116V96H32v20l104.1 119 7.9 9v12zm-32 0L0 128V96 64H32 320h32V96v32L240 256V409.2 448l-32-22-96-66V256zM384 80h16 96 16v32H496 400 384V80zM336 240H496h16v32H496 336 320V240h16zm0 160H496h16v32H496 336 320V400h16z"/></svg>
+            Показать фильтры
+        </span>
+        <Filter :open="isFilterOpen" />
         <!-- Отображение автомобилей с использованием компонента Car -->
         <Car v-for="car in cars" :key="car.id" :data="car"/>
     </div>
