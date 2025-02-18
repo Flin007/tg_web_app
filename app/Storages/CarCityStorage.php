@@ -21,20 +21,34 @@ class CarCityStorage
         $this->cache = $cache;
     }
 
+    /**
+     * Получаем все города из репозитория и кешируем на день.
+     *
+     * @return Collection
+     */
     public function all(): Collection
     {
         return $this->cache->remember(
             "{$this->prefix}all",
-            DateTimeHelper::HOUR,
+            DateTimeHelper::DAY,
             fn() => $this->repository->all(),
         );
     }
 
+    /**
+     * Получаем все активные города из закешированных всех городов и кешируем на день.
+     *
+     * @return Collection
+     */
     public function allActive(): Collection
     {
-        return $this->all()->filter(function (CarCity $carCity) {
-            $carCity->is_active = true;
-        });
+        return $this->cache->remember(
+            "{$this->prefix}allActive",
+            DateTimeHelper::DAY,
+            fn() => $this->all()->filter(function (CarCity $carCity) {
+                return $carCity->is_active === true;
+            }),
+        );
     }
 
     /**
@@ -43,5 +57,6 @@ class CarCityStorage
     public function clear(): void
     {
         $this->cache->delete("{$this->prefix}all");
+        $this->cache->delete("{$this->prefix}allActive");
     }
 }

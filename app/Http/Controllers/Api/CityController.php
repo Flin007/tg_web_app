@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\CarCityRepository;
+use App\Storages\CarCityStorage;
 use Illuminate\Http\JsonResponse;
 
 class CityController extends Controller
 {
-    private CarCityRepository $carCityRepository;
+    private CarCityStorage $carCityStorage;
 
-    public function __construct(CarCityRepository $carCityRepository)
+    public function __construct(CarCityStorage $carCityStorage)
     {
-        $this->carCityRepository = $carCityRepository;
+        $this->carCityStorage = $carCityStorage;
     }
 
     /**
@@ -20,6 +20,6 @@ class CityController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json($this->carCityRepository->all());
+        return response()->json($this->carCityStorage->allActive());
     }
 }
