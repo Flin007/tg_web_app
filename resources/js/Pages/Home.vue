@@ -5,6 +5,7 @@ import HomeTitle from "../Components/Home/HomeTitle.vue";
 import Car from '../Components/Home/Car.vue';
 import Filter from "../Components/Home/Filter.vue";
 import {useCarStore} from "../stores/car.js";
+import {useFilterStore} from "../stores/filter.js";
 //Рзрешаем доступ к сайту только если юзер зашел через web app tg
 const accessDenied = ref(false);
 //Телеграм web app
@@ -19,6 +20,8 @@ const homeTitleData = ref(null);
 const isFilterOpen = ref(false);
 //Хранилище для загруженных с бека машин
 const carStore = useCarStore();
+//Хранилище для фильтров
+const filterStore = useFilterStore();
 
 onMounted(async () => {
     // Получаем данные пользователя из TelegramWebApp
@@ -43,6 +46,8 @@ onMounted(async () => {
 
     // Загружаем первую страницу при монтировании компонента
     await carStore.loadCars();
+    // Загрузка городов при монтировании
+    await filterStore.fetchCities();
 
     // Устанавливаем флаг готовности после завершения всех операций
     isReady.value = true;
@@ -52,7 +57,7 @@ onMounted(async () => {
 
 <template>
     <!-- preloader -->
-    <div v-if="!isReady" class="fixed flex items-center justify-center w-full h-full bg-white z-10">
+    <div v-if="!isReady || filterStore.isLoading" class="fixed flex items-center justify-center w-full h-full bg-white z-20">
         <span class="spinner"></span>
     </div>
 
