@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CarController;
 use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\ContentController;
@@ -13,3 +14,6 @@ Route::get('/cars', [CarController::class, 'index']);
 
 //Получение городов
 Route::get('/cities', [CityController::class, 'index']);
+
+//Получение брендов
+Route::get('/brands', [BrandController::class, 'index']);

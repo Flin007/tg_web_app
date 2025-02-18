@@ -1,6 +1,6 @@
 <template>
-    <TransitionRoot as="template" :show="isOpen">
-        <Dialog class="relative z-10" @close="isOpen = false">
+    <TransitionRoot as="template" :show="filterStore.isOpen">
+        <Dialog class="relative z-10" @close="filterStore.isOpen = false">
             <div class="fixed inset-0" />
 
             <div class="fixed inset-0 overflow-hidden">
@@ -14,7 +14,7 @@
                                             <div class="flex items-center justify-between">
                                                 <DialogTitle class="text-base font-semibold leading-6 text-white">Фильтры</DialogTitle>
                                                 <div class="ml-3 flex h-7 items-center">
-                                                    <button type="button" class="relative rounded-md bg-blue-700 text-blue-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white" @click="isOpen = false">
+                                                    <button type="button" class="relative rounded-md bg-blue-700 text-blue-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white" @click="filterStore.isOpen = false">
                                                         <span class="absolute -inset-2.5 outline-none" />
                                                         <span class="sr-only">Close panel</span>
                                                         <svg fill="#fff" width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M192 233.4L59.5 100.9 36.9 123.5 169.4 256 36.9 388.5l22.6 22.6L192 278.6 324.5 411.1l22.6-22.6L214.6 256 347.1 123.5l-22.6-22.6L192 233.4z"/></svg>
@@ -35,6 +35,18 @@
                                                 <select v-model="filterStore.selectedCity" @change="updateFilter('city', filterStore.selectedCity)" id="city" name="city" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6">
                                                     <option v-for="city in filterStore.cities" :key="city.id" :value="city.id">
                                                         {{ city.name }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <!-- Фильтр по Маркам -->
+                                            <div class="mt-3">
+                                                <div class="flex justify-between">
+                                                    <label for="brand" class="block text-sm font-medium leading-6 text-gray-900">Марка</label>
+                                                    <span v-show="filterStore.selectedBrand" @click="unsetFiler('brand')" class="text-sm text-blue-600">Очистить</span>
+                                                </div>
+                                                <select v-model="filterStore.selectedBrand" @change="updateFilter('brand', filterStore.selectedBrand)" id="brand" name="brand" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6">
+                                                    <option v-for="brand in filterStore.brands" :key="brand.id" :value="brand.id">
+                                                        {{ brand.name }}
                                                     </option>
                                                 </select>
                                             </div>
@@ -78,8 +90,8 @@ const unsetFiler = (key) => {
         case "city":
             filterStore.clearSelectedCity()
             break;
-        case "something else":
-            console.log("something else");
+        case "brand":
+            filterStore.clearSelectedBrand()
             break;
     }
 }
@@ -100,20 +112,6 @@ const filterCars = async () => {
     await carStore.loadCars();
     //Закрываем модалку
     filterStore.isLoading = false;
-    isOpen.value = false;
+    filterStore.isOpen = false;
 };
-
-const props = defineProps({
-    open: {
-        type: Boolean,
-        default: false
-    }
-});
-
-// Используйте ref для создания реактивной переменной, которая будет синхронизироваться с пропсом
-const isOpen = ref(props.open);
-// Наблюдаем за изменениями пропса open, чтобы обновлять локальную реактивную переменную
-watch(() => props.open, (newValue) => {
-    isOpen.value = newValue;
-});
 </script>

@@ -15,6 +15,8 @@ export const useCarStore = defineStore('car', {
             try {
                 // Формируем строку запроса для фильтров
                 const queryString = new URLSearchParams(this.filters).toString();
+                console.log('queryString')
+                console.log(queryString)
                 const response = await axios.get(`/api/cars?page=${this.currentPage}&${queryString}`);
                 const { data, last_page } = response.data;
                 if (this.currentPage === 1) {

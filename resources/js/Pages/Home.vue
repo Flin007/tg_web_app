@@ -4,6 +4,7 @@ import Header from "../Components/Home/Header.vue";
 import HomeTitle from "../Components/Home/HomeTitle.vue";
 import Car from '../Components/Home/Car.vue';
 import Filter from "../Components/Home/Filter.vue";
+import NothingToShow from "../Components/Home/NothingToShow.vue";
 import {useCarStore} from "../stores/car.js";
 import {useFilterStore} from "../stores/filter.js";
 import {useTelegramUserStore} from "../stores/telegramUser.js";
@@ -48,8 +49,10 @@ onMounted(async () => {
 
     // Загружаем первую страницу при монтировании компонента
     await carStore.loadCars();
-    // Загрузка городов при монтировании
+    // Загрузка Городов
     await filterStore.fetchCities();
+    // Загрузка Марок авто
+    await filterStore.fetchBrands();
 
     // Устанавливаем флаг готовности после завершения всех операций
     isReady.value = true;
@@ -103,15 +106,16 @@ onMounted(async () => {
         <HomeTitle v-if="homeTitleData" :title="homeTitleData.value"/>
         <!-- Открытие фильтров -->
         <div class="m-4">
-            <span @click="isFilterOpen = !isFilterOpen" class="flex text-gray-400 max-w-[480px] mx-auto">
+            <span @click="filterStore.isOpen = !filterStore.isOpen" class="flex text-gray-400 max-w-[480px] mx-auto">
             <svg class="mr-2" fill="#9ca3af" width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path
                 d="M144 256v87.2l64 44V256 244l7.9-9L320 116V96H32v20l104.1 119 7.9 9v12zm-32 0L0 128V96 64H32 320h32V96v32L240 256V409.2 448l-32-22-96-66V256zM384 80h16 96 16v32H496 400 384V80zM336 240H496h16v32H496 336 320V240h16zm0 160H496h16v32H496 336 320V400h16z"/></svg>
             Показать фильтры
         </span>
         </div>
-        <Filter :open="isFilterOpen"/>
+        <Filter/>
         <!-- Отображение автомобилей с использованием компонента Car -->
-        <Car v-for="car in carStore.cars" :key="car.id" :data="car"/>
+        <Car v-if="carStore.cars.length > 0" v-for="car in carStore.cars" :key="car.id" :data="car"/>
+        <NothingToShow v-else/>
         <!-- Кнопка показать ещё -->
         <div class="flex justify-center mb-4">
             <button v-if="carStore.isShowMoreButtonAvailable"
