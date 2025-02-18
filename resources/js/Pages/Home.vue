@@ -4,6 +4,7 @@ import Header from "../Components/Home/Header.vue";
 import HomeTitle from "../Components/Home/HomeTitle.vue";
 import Car from '../Components/Home/Car.vue';
 import Filter from "../Components/Home/Filter.vue";
+import {useCarStore} from "../stores/car.js";
 //Рзрешаем доступ к сайту только если юзер зашел через web app tg
 const accessDenied = ref(false);
 //Телеграм web app
@@ -16,15 +17,8 @@ const isReady = ref(false);
 const homeTitleData = ref(null);
 //Открыты ли фильтры
 const isFilterOpen = ref(false);
-//Есть ли ещё автомобили
-const isShowMoreButtonAvailable = ref(true);
-// Используем defineProps для получения данных, переданных от сервера
-const props = defineProps({
-    cars: {
-        type: Array,
-        default: () => []
-    }
-});
+//Хранилище для загруженных с бека машин
+const carStore = useCarStore();
 
 onMounted(async () => {
     // Получаем данные пользователя из TelegramWebApp
@@ -47,8 +41,8 @@ onMounted(async () => {
         console.error('Error fetching HomeTitle data:', error);
     }
 
-    //Проверяем нужно ли показывать кнопку `Показать ещё`
-    isShowMoreButtonAvailable.value = props.cars.current_page < props.cars.last_page;
+    // Загружаем первую страницу при монтировании компонента
+    await carStore.loadCars();
 
     // Устанавливаем флаг готовности после завершения всех операций
     isReady.value = true;
@@ -105,10 +99,14 @@ onMounted(async () => {
         </div>
         <Filter :open="isFilterOpen" />
         <!-- Отображение автомобилей с использованием компонента Car -->
-        <Car v-for="car in cars.data" :key="car.id" :data="car"/>
+        <Car v-for="car in carStore.cars" :key="car.id" :data="car"/>
         <!-- Кнопка показать ещё -->
-        <div class="flex justify-center">
-            <button v-if="isShowMoreButtonAvailable" type="button" class="rounded-md bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+        <div class="flex justify-center mb-4">
+            <button v-if="carStore.isShowMoreButtonAvailable"
+                    @click="carStore.loadCars()"
+                    type="button"
+                    class="rounded-md bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            >
                 Показать ещё
             </button>
         </div>

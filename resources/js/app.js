@@ -4,6 +4,9 @@ import {createApp, h} from 'vue';
 import {createInertiaApp} from '@inertiajs/vue3';
 //Телеграм апп
 import TelegramWebApp from '@twa-dev/sdk';
+//Хранилище для удобной подгрузки авто и рендера
+import { createPinia } from 'pinia';
+const pinia = createPinia();
 
 createInertiaApp({
     resolve: name => {
@@ -21,6 +24,7 @@ createInertiaApp({
 
         // Остальные плагины и компоненты
         VueApp.use(plugin)
+            .use(pinia)
             .mount(el);
     },
     progress: {
