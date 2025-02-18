@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CarController;
+use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\ContentController;
 use Illuminate\Support\Facades\Route;
 
@@ -9,3 +10,6 @@ Route::get('/content/home-title', [ContentController::class, 'getHomeTitle']);
 
 //Получение автомобилей
 Route::get('/cars', [CarController::class, 'index']);
+
+//Получение городов
+Route::get('/cities', [CityController::class, 'index']);
