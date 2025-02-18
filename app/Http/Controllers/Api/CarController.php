@@ -25,7 +25,12 @@ class CarController extends Controller
         ])
             ->filter(request(Car::AVAILABLE_FILTERS))
             ->where('is_available', true)
-            ->paginate(1); //TODO: поставить норм значение после тестов
+            ->paginate(1)//TODO: поставить норм значение после тестов
+            ->withQueryString()
+            ->through(function ($car) {
+                $car->vin = Car::maskVin($car->vin); // Используем статический метод
+                return $car;
+            });
 
         return response()->json($cars);
     }
