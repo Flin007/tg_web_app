@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CarController;
-use App\Http\Controllers\ContentController;
+use App\Http\Controllers\Api\ContentController;
 use Illuminate\Support\Facades\Route;
 
 //Получение динамических vue компонентов
