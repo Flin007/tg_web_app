@@ -6,12 +6,11 @@ import Car from '../Components/Home/Car.vue';
 import Filter from "../Components/Home/Filter.vue";
 import {useCarStore} from "../stores/car.js";
 import {useFilterStore} from "../stores/filter.js";
-//Рзрешаем доступ к сайту только если юзер зашел через web app tg
+import {useTelegramUserStore} from "../stores/telegramUser.js";
+//Разрешаем доступ к сайту только если юзер зашел через web app tg
 const accessDenied = ref(false);
 //Телеграм web app
 const {$tg} = getCurrentInstance().appContext.config.globalProperties
-//Наш юзер
-const user = ref(null);
 //Индикатор готовности страницы
 const isReady = ref(false);
 //Динамический компонент с таекстом на главной
@@ -22,11 +21,14 @@ const isFilterOpen = ref(false);
 const carStore = useCarStore();
 //Хранилище для фильтров
 const filterStore = useFilterStore();
+//Хранилище для данных телеграм юзера
+const telegramUserStore = useTelegramUserStore();
 
 onMounted(async () => {
     // Получаем данные пользователя из TelegramWebApp
     if ($tg && $tg.initDataUnsafe && $tg.initDataUnsafe.user) {
-        user.value = $tg.initDataUnsafe.user;
+        //Сетим телеграм юзера в стор
+        telegramUserStore.setUser($tg.initDataUnsafe.user);
         accessDenied.value = false
     } else {
         //Если ничего не получили, возвращаемся
@@ -97,7 +99,7 @@ onMounted(async () => {
 
     <!-- Тут уже отрисуем основное приложение -->
     <div v-else v-if="isReady">
-        <Header :user="user"/>
+        <Header/>
         <HomeTitle v-if="homeTitleData" :title="homeTitleData.value"/>
         <!-- Открытие фильтров -->
         <div class="m-4">

@@ -4,8 +4,8 @@
         <div class="flex items-center">
             <!-- Аватар, если нет ? -->
             <img
-                v-if="user && user.photo_url"
-                :src="user.photo_url"
+                v-if="telegramUser.user && telegramUser.user.photo_url"
+                :src="telegramUser.user.photo_url"
                 alt="User avatar"
                 class="w-10 h-10 rounded-full"
             />
@@ -15,8 +15,8 @@
 
             <!-- ФИ или username -->
             <div class="ml-2.5">
-                <p v-if="user" class="text-sm font-bold">
-                    {{ user.first_name ? `${user.first_name} ${user.last_name || ''}` : user.username }}
+                <p v-if="telegramUser.user" class="text-sm font-bold">
+                    {{ telegramUser.user.first_name ? `${telegramUser.user.first_name} ${telegramUser.user.last_name || ''}` : telegramUser.user.username }}
                 </p>
                 <p v-else class="text-sm font-bold">Гость</p>
             </div>
@@ -27,21 +27,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import {useTelegramUserStore} from "../../stores/telegramUser.js";
 
-const props = defineProps({
-    user: {
-        type: Object,
-        default: null
-    }
-});
-
-const displayUserName = computed(() => {
-    if (props.user) {
-        return props.user.first_name
-            ? `${props.user.first_name} ${props.user.last_name || ''}`
-            : props.user.username;
-    }
-    return 'Гость';
-});
+const telegramUser = useTelegramUserStore();
 </script>
