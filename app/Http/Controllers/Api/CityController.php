@@ -3,22 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Car;
-use App\Models\CarCity;
+use App\Repositories\CarCityRepository;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class CityController extends Controller
 {
+    private CarCityRepository $carCityRepository;
+
+    public function __construct(CarCityRepository $carCityRepository)
+    {
+        $this->carCityRepository = $carCityRepository;
+    }
+
     /**
      * @return JsonResponse
      */
     public function index(): JsonResponse
     {
-        $cities = CarCity::query()
-            ->where('is_active', true)
-            ->get();
-
-        return response()->json($cities);
+        return response()->json($this->carCityRepository->all());
     }
 }
