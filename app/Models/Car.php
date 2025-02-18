@@ -132,8 +132,8 @@ class Car extends Model
     public function scopeFilter(Builder $query, array $filters): void
     {
         //Фильтруем city
-        if (isset($filters['country']['id']) ?? false) {
-            $query->where('country_id', $filters['country']['id']);
+        if (isset($filters['city']) ?? false) {
+            $query->where('city_id', $filters['city']);
         }
     }
 }

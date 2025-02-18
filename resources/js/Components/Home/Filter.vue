@@ -8,7 +8,7 @@
                     <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
                         <TransitionChild as="template" enter="transform transition ease-in-out duration-500 sm:duration-700" enter-from="translate-x-full" enter-to="translate-x-0" leave="transform transition ease-in-out duration-500 sm:duration-700" leave-from="translate-x-0" leave-to="translate-x-full">
                             <DialogPanel class="pointer-events-auto w-screen max-w-md">
-                                <form class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
+                                <form @submit.prevent="filterCars" class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
                                     <div class="h-0 flex-1 overflow-y-auto">
                                         <div class="bg-blue-700 px-4 py-6 sm:px-6">
                                             <div class="flex items-center justify-between">
@@ -25,14 +25,26 @@
                                                 <p class="text-sm text-blue-300">Выберете интересующие вас параметры и нажмите применить.</p>
                                             </div>
                                         </div>
-                                        <div class="flex flex-1 flex-col justify-between">
-                                            Тут добавим фильтры
-                                            <!-- TODO: Добавить собственно фильтры -->
+                                        <div class="flex flex-1 flex-col justify-between m-4">
+                                            <!-- Фильтр по городам -->
+                                            <div>
+                                                <div class="flex justify-between">
+                                                    <label for="city" class="block text-sm font-medium leading-6 text-gray-900">Город</label>
+                                                    <span v-show="filterStore.selectedCity" @click="unsetFiler('city')" class="text-sm text-blue-600">Очистить</span>
+                                                </div>
+                                                <select v-model="filterStore.selectedCity" @change="updateFilter('city', filterStore.selectedCity)" id="city" name="city" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6">
+                                                    <option v-for="city in filterStore.cities" :key="city.id" :value="city.id">
+                                                        {{ city.name }}
+                                                    </option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="flex flex-shrink-0 justify-end px-4 py-4">
-                                        <button type="button" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" @click="isOpen = false">Отмена</button>
-                                        <button type="submit" class="ml-4 inline-flex justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Применить</button>
+                                    <div class="flex flex-shrink-0 justify-between px-4 py-4">
+                                        <button type="button" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" @click="resetFilter">Сбросить фильтры</button>
+                                        <div>
+                                            <button type="submit" class="ml-4 inline-flex justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">Применить</button>
+                                        </div>
                                     </div>
                                 </form>
                             </DialogPanel>
@@ -45,8 +57,51 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch } from 'vue';
+import {ref, defineProps, watch, onMounted} from 'vue';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
+import {useFilterStore} from "../../stores/filter.js";
+import {useCarStore} from "../../stores/car.js";
+
+const filterStore = useFilterStore();
+const carStore = useCarStore();
+
+//Записываем примененный фильтр в хранилище для машин
+const updateFilter = (key, value) => {
+    carStore.setFilter(key, value);
+}
+//Сбрасываем фильтр по ключу
+const unsetFiler = (key) => {
+    //Сбрасываем в carStore
+    carStore.unsetFilter(key);
+    //Сбрасываем в filterStore
+    switch (key) {
+        case "city":
+            filterStore.clearSelectedCity()
+            break;
+        case "something else":
+            console.log("something else");
+            break;
+    }
+}
+
+//Сбрасываем все фильтры
+const resetFilter = async () => {
+    carStore.resetFilter();
+    filterStore.resetFilter();
+    await filterCars();
+}
+
+//Применяем фильтры
+const filterCars = async () => {
+    filterStore.isLoading = true;
+    //Сбрасываем пагинациб для нового запроса с фильтрами
+    carStore.currentPage = 1;
+    //Дожидаемся загрузки
+    await carStore.loadCars();
+    //Закрываем модалку
+    filterStore.isLoading = false;
+    isOpen.value = false;
+};
 
 const props = defineProps({
     open: {
@@ -61,42 +116,4 @@ const isOpen = ref(props.open);
 watch(() => props.open, (newValue) => {
     isOpen.value = newValue;
 });
-
-const team = [
-    {
-        name: 'Tom Cook',
-        email: 'tom.cook@example.com',
-        href: '#',
-        imageUrl:
-            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    {
-        name: 'Whitney Francis',
-        email: 'whitney.francis@example.com',
-        href: '#',
-        imageUrl:
-            'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    {
-        name: 'Leonard Krasner',
-        email: 'leonard.krasner@example.com',
-        href: '#',
-        imageUrl:
-            'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    {
-        name: 'Floyd Miles',
-        email: 'floyd.miles@example.com',
-        href: '#',
-        imageUrl:
-            'https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    {
-        name: 'Emily Selman',
-        email: 'emily.selman@example.com',
-        href: '#',
-        imageUrl:
-            'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-]
 </script>
