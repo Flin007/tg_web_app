@@ -2,14 +2,14 @@
 
 namespace App\Observers;
 
-use App\Storages\CarBranStorage;
+use App\Storages\CarBrandStorage;
 use Psr\SimpleCache\InvalidArgumentException;
 
 class CarBrandObserver
 {
-    private CarBranStorage $storage;
+    private CarBrandStorage $storage;
 
-    public function __construct(CarBranStorage $storage)
+    public function __construct(CarBrandStorage $storage)
     {
         $this->storage = $storage;
     }

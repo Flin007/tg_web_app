@@ -8,7 +8,7 @@ use Illuminate\Cache\CacheManager;
 use Illuminate\Support\Collection;
 use Psr\SimpleCache\InvalidArgumentException;
 
-class CarBranStorage
+class CarBrandStorage
 {
     private const PREFIX = 'CarBrandStorage::';
     private string $prefix = self::PREFIX;

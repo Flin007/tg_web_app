@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Storages\CarBranStorage;
+use App\Storages\CarBrandStorage;
 use Illuminate\Http\JsonResponse;
 
 class BrandController extends Controller
 {
-    private CarBranStorage $carBranStorage;
+    private CarBrandStorage $carBranStorage;
 
-    public function __construct(CarBranStorage $carBranStorage)
+    public function __construct(CarBrandStorage $carBranStorage)
     {
         $this->carBranStorage = $carBranStorage;
     }
