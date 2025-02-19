@@ -8,8 +8,6 @@ import NothingToShow from "../Components/Home/NothingToShow.vue";
 import {useCarStore} from "../stores/car.js";
 import {useFilterStore} from "../stores/filter.js";
 import {useTelegramUserStore} from "../stores/telegramUser.js";
-//Разрешаем доступ к сайту только если юзер зашел через web app tg
-const accessDenied = ref(false);
 //Телеграм web app
 const {$tg} = getCurrentInstance().appContext.config.globalProperties
 //Индикатор готовности страницы
@@ -28,10 +26,13 @@ onMounted(async () => {
     if ($tg && $tg.initDataUnsafe && $tg.initDataUnsafe.user) {
         //Сетим телеграм юзера в стор
         telegramUserStore.setUser($tg.initDataUnsafe.user);
-        accessDenied.value = false
-    } else {
-        //Если ничего не получили, возвращаемся
-        accessDenied.value = true
+        //Проверяем доступ юзера
+        await telegramUserStore.checkTelegramUserStatus();
+    }
+
+    //Если доступ запрещён нет смысла получать данные для фронта
+    if (telegramUserStore.accessDenied) {
+        isReady.value = true;
         return;
     }
 
@@ -76,7 +77,7 @@ const loadInitialData = async () => {
 
 
     <!-- Если доступ запрещен, показываем только этот блок -->
-    <div v-if="accessDenied" class="fixed inset-0 z-10 w-screen overflow-y-auto">
+    <div v-if="telegramUserStore.accessDenied" class="fixed inset-0 z-10 w-screen overflow-y-auto">
         <div class="flex min-h-full justify-center p-4 text-center items-center sm:p-0">
             <div
                 class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">

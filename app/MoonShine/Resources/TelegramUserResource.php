@@ -48,6 +48,7 @@ class TelegramUserResource extends ModelResource
             Checkbox::make('Премиум?', 'is_premium'),
             Checkbox::make('Бот?', 'is_bot'),
             Checkbox::make('Статус', 'is_active'),
+            Checkbox::make('Заблокирован?', 'is_blocked'),
         ];
     }
 
@@ -63,8 +64,8 @@ class TelegramUserResource extends ModelResource
                 Text::make('username','username')->readonly()->copy(),
                 Text::make('Имя','first_name')->readonly()->copy(),
                 Text::make('Фамилия','last_name')->readonly()->copy(),
-                Checkbox::make('Статус', 'is_active')
-                    ->hint('Можно запретить юзеру доступ к боту если снять галочку.')
+                Checkbox::make('Заблокирован?', 'is_blocked')
+                    ->hint('Можно запретить юзеру запускать веб-приложение')
                     ->default(true),
             ])
         ];

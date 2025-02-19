@@ -20,6 +20,8 @@ use Illuminate\Support\Carbon;
  * @property boolean $is_admin админ? Пока не юзаю
  * @property boolean $is_premium есть ли премиум
  * @property boolean $is_bot является ли юзер ботом?
+ * @property boolean $is_active Вышел ли из бота, можно ли ему писать?
+ * @property boolean $is_blocked Заблокирован ли в приложении
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
@@ -27,6 +29,8 @@ class TelegramUser extends Model
 {
     use HasFactory;
     protected $table = 'telegram_users';
-    //Защищаем от хаписи колонку is_admin, чтобы её можно было менять только на прямую в бд
-    protected $guarded = ['is_admin'];
+
+    protected $fillable = [
+        'user_id', 'username', 'first_name', 'last_name', 'is_premium', 'is_bot', 'is_active', 'is_blocked',
+    ];
 }

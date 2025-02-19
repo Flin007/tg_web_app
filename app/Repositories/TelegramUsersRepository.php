@@ -17,22 +17,10 @@ class TelegramUsersRepository extends ModelRepository
      *
      * @return mixed|null
      */
-    public function findOneUserByUserId(int $userId): mixed
+    public function findOneUserByUserId(int $userId): ?TelegramUser
     {
         return $this->createQueryBuilder()
             ->where('user_id', '=', $userId)
             ->first();
-    }
-
-    /**
-     * @param array $userIds
-     *
-     * @return Collection
-     */
-    public function findManyUsersByUserIds(array $userIds): Collection
-    {
-        return $this->createQueryBuilder()
-            ->whereIn('user_id', $userIds)
-            ->get();
     }
 }
