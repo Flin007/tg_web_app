@@ -43,6 +43,7 @@ export const useFilterStore = defineStore('filter', {
         resetFilter(){
             this.clearSelectedCity();
             this.clearSelectedBrand();
+            this.clearSelectedModel();
         }
     }
 });
