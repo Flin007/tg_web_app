@@ -30,7 +30,7 @@
                                             <div>
                                                 <div class="flex justify-between">
                                                     <label for="city" class="block text-sm font-medium leading-6 text-gray-900">Город</label>
-                                                    <span v-show="filterStore.selectedCity" @click="unsetFiler('city')" class="text-sm text-blue-600">Очистить</span>
+                                                    <span v-show="filterStore.selectedCity" @click="unsetFilter('city')" class="text-sm text-blue-600">Очистить</span>
                                                 </div>
                                                 <select v-model="filterStore.selectedCity" @change="updateFilter('city', filterStore.selectedCity)" id="city" name="city" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6">
                                                     <option v-for="city in filterStore.cities" :key="city.id" :value="city.id">
@@ -42,9 +42,9 @@
                                             <div class="mt-3">
                                                 <div class="flex justify-between">
                                                     <label for="brand" class="block text-sm font-medium leading-6 text-gray-900">Марка</label>
-                                                    <span v-show="filterStore.selectedBrand" @click="unsetFiler('brand')" class="text-sm text-blue-600">Очистить</span>
+                                                    <span v-show="filterStore.selectedBrand" @click="unsetFilter('brand')" class="text-sm text-blue-600">Очистить</span>
                                                 </div>
-                                                <select v-model="filterStore.selectedBrand" @change="updateFilter('brand', filterStore.selectedBrand)" id="brand" name="brand" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6">
+                                                <select v-model="filterStore.selectedBrand" @change="onChangeBrand" id="brand" name="brand" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6">
                                                     <option v-for="brand in filterStore.brands" :key="brand.id" :value="brand.id">
                                                         {{ brand.name }}
                                                     </option>
@@ -54,7 +54,7 @@
                                             <div class="mt-3">
                                                 <div class="flex justify-between">
                                                     <label for="model" class="block text-sm font-medium leading-6 text-gray-900">Модель</label>
-                                                    <span v-show="filterStore.selectedModel" @click="unsetFiler('model')" class="text-sm text-blue-600">Очистить</span>
+                                                    <span v-show="filterStore.selectedModel" @click="unsetFilter('model')" class="text-sm text-blue-600">Очистить</span>
                                                 </div>
                                                 <select v-model="filterStore.selectedModel" @change="updateFilter('model', filterStore.selectedModel)" id="model" name="model" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6">
                                                     <option v-for="model in filterStore.models" :key="model.id" :value="model.id">
@@ -92,8 +92,9 @@ const carStore = useCarStore();
 const updateFilter = (key, value) => {
     carStore.setFilter(key, value);
 }
+
 //Сбрасываем фильтр по ключу
-const unsetFiler = (key) => {
+const unsetFilter = (key) => {
     //Сбрасываем в carStore
     carStore.unsetFilter(key);
     //Сбрасываем в filterStore
@@ -128,4 +129,13 @@ const filterCars = async () => {
     filterStore.isLoading = false;
     filterStore.isOpen = false;
 };
+
+//Функция для обработки смены бренда, т.к. от смены бренда зависят модели, которые можно выбрать
+const onChangeBrand = () => {
+    updateFilter('brand', filterStore.selectedBrand);
+    //Сбросим модель при смене бренда
+    unsetFilter('model');
+    //Заполним массив моделей в зависимости от выбранного бренда
+    filterStore.updateModelsByBrandId(filterStore.selectedBrand)
+}
 </script>

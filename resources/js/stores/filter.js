@@ -11,6 +11,7 @@ export const useFilterStore = defineStore('filter', {
         brands: [],
         selectedBrand: null,
         //Модели
+        allModels: [],
         models: [],
         selectedModel: null,
     }),
@@ -30,14 +31,25 @@ export const useFilterStore = defineStore('filter', {
         },
         clearSelectedBrand() {
             this.selectedBrand = null;
+            //Если сбросили выбранный бренд, значит снова доступны все модели
+            this.models = this.allModels;
         },
         //Модели
         async fetchModels() {
             const response = await axios.get('/api/models');
             this.models = response.data;
+            this.allModels = response.data;
         },
         clearSelectedModel() {
             this.selectedModel = null;
+        },
+        updateModelsByBrandId(brandId) {
+            if (brandId !== null) {
+                this.models = this.allModels.filter(model => model.brand_id === brandId);
+            } else {
+                // Если бренд не выбран, очищаем список моделей
+                this.models = this.allModels;
+            }
         },
         //Сброс всех фильтров
         resetFilter(){
