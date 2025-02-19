@@ -47,16 +47,24 @@ onMounted(async () => {
         console.error('Error fetching HomeTitle data:', error);
     }
 
-    // Загружаем первую страницу при монтировании компонента
-    await carStore.loadCars();
-    // Загрузка Городов
-    await filterStore.fetchCities();
-    // Загрузка Марок авто
-    await filterStore.fetchBrands();
+    //Загружаем необходимые данные
+    await loadInitialData()
 
     // Устанавливаем флаг готовности после завершения всех операций
     isReady.value = true;
 });
+
+const loadInitialData = async () => {
+    // Запускаем все запросы параллельно
+    await Promise.all([
+        // Загружаем первую страницу при монтировании компонента
+        carStore.loadCars(),
+        // Загрузка Городов
+        filterStore.fetchCities(),
+        // Загрузка Марок авто
+        filterStore.fetchBrands(),
+    ]);
+};
 
 </script>
 
