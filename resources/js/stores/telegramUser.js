@@ -4,7 +4,7 @@ export const useTelegramUserStore = defineStore('telegramUser', {
     state: () => ({
         user: {},
         //Доступ запрещен?
-        accessDenied: false,
+        accessDenied: true,
     }),
     actions: {
         setUser(user) {
@@ -13,8 +13,9 @@ export const useTelegramUserStore = defineStore('telegramUser', {
         async checkTelegramUserStatus(){
             try{
                 await axios.get(`/api/telegram/user/checkStatus?user_id=${this.user.id}`);
+                this.accessDenied = false;
             } catch (error) {
-                this.accessDenied = true;
+                console.log(error)
             }
         }
     }
