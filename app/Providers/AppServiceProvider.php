@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\CarBrand;
 use App\Models\CarCity;
+use App\Observers\CarBrandObserver;
 use App\Observers\CarCityObserver;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,5 +24,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         CarCity::observe(CarCityObserver::class);
+        CarBrand::observe(CarBrandObserver::class);
     }
 }
