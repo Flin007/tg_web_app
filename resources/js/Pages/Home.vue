@@ -16,8 +16,6 @@ const {$tg} = getCurrentInstance().appContext.config.globalProperties
 const isReady = ref(false);
 //Динамический компонент с таекстом на главной
 const homeTitleData = ref(null);
-//Открыты ли фильтры
-const isFilterOpen = ref(false);
 //Хранилище для загруженных с бека машин
 const carStore = useCarStore();
 //Хранилище для фильтров
