@@ -15,9 +15,9 @@
                             Доступ на сайт запрещён
                         </h3>
                         <div class="mt-2">
-                            <p v-if="telegramUserStore.user" class="text-sm text-gray-500">
+                            <p class="text-sm text-gray-500">
                                 {{
-                                    telegramUserStore.user
+                                    telegramUserStore.user.id
                                         ? 'Доступ к приложению ограничен. Пожалуйста, свяжитесь с администратором для решения проблемы.'
                                         : 'Запустите приложение в нашем телеграм боте для доступа к сайту.'
                                 }}
@@ -26,11 +26,11 @@
                     </div>
                 </div>
                 <div class="mt-5 sm:mt-6">
-                    <a :href="telegramUserStore.user ? 'https://t.me/notcollector' : 'https://t.me/t3zusauto_bot'"
+                    <a :href="telegramUserStore.user.id ? 'https://t.me/notcollector' : 'https://t.me/t3zusauto_bot'"
                        class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                     >
                         {{
-                            telegramUserStore.user
+                            telegramUserStore.user.id
                                 ? 'Написать администратору'
                                 : 'Перейти в бота'
                         }}
