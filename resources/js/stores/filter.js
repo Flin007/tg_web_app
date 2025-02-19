@@ -37,7 +37,7 @@ export const useFilterStore = defineStore('filter', {
             this.models = response.data;
         },
         clearSelectedModel() {
-            this.selectedCity = null;
+            this.selectedModel = null;
         },
         //Сброс всех фильтров
         resetFilter(){

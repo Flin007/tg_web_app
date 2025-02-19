@@ -104,6 +104,9 @@ const unsetFiler = (key) => {
         case "brand":
             filterStore.clearSelectedBrand()
             break;
+        case "model":
+            filterStore.clearSelectedModel()
+            break;
     }
 }
 
