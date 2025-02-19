@@ -63,6 +63,8 @@ const loadInitialData = async () => {
         filterStore.fetchCities(),
         // Загрузка Марок авто
         filterStore.fetchBrands(),
+        // Загрузка Моделей авто
+        filterStore.fetchModels()
     ]);
 };
 

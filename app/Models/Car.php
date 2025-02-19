@@ -119,7 +119,7 @@ class Car extends Model
         return substr($vin, 0, 7) . '*' . substr($vin, 8, 2) . '****' . substr($vin, -2);
     }
 
-    public const AVAILABLE_FILTERS = ['city', 'brand'];
+    public const AVAILABLE_FILTERS = ['city', 'brand', 'model'];
 
     /**
      * Фильтруем машины по переданным параметрам
@@ -138,6 +138,10 @@ class Car extends Model
         //Фильтруем brand
         if (isset($filters['brand']) ?? false) {
             $query->where('brand_id', $filters['brand']);
+        }
+        //Фильтруем model
+        if (isset($filters['model']) ?? false) {
+            $query->where('model_id', $filters['model']);
         }
     }
 }

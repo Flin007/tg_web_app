@@ -10,8 +10,12 @@ export const useFilterStore = defineStore('filter', {
         //Бренды
         brands: [],
         selectedBrand: null,
+        //Модели
+        models: [],
+        selectedModel: null,
     }),
     actions: {
+        //Города
         async fetchCities() {
             const response = await axios.get('/api/cities');
             this.cities = response.data;
@@ -19,6 +23,7 @@ export const useFilterStore = defineStore('filter', {
         clearSelectedCity() {
             this.selectedCity = null;
         },
+        //Бренды
         async fetchBrands() {
             const response = await axios.get('/api/brands');
             this.brands = response.data;
@@ -26,6 +31,15 @@ export const useFilterStore = defineStore('filter', {
         clearSelectedBrand() {
             this.selectedBrand = null;
         },
+        //Модели
+        async fetchModels() {
+            const response = await axios.get('/api/models');
+            this.models = response.data;
+        },
+        clearSelectedModel() {
+            this.selectedCity = null;
+        },
+        //Сброс всех фильтров
         resetFilter(){
             this.clearSelectedCity();
             this.clearSelectedBrand();

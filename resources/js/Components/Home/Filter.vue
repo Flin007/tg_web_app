@@ -50,6 +50,18 @@
                                                     </option>
                                                 </select>
                                             </div>
+                                            <!-- Фильтр по Моделям -->
+                                            <div class="mt-3">
+                                                <div class="flex justify-between">
+                                                    <label for="model" class="block text-sm font-medium leading-6 text-gray-900">Модель</label>
+                                                    <span v-show="filterStore.selectedModel" @click="unsetFiler('model')" class="text-sm text-blue-600">Очистить</span>
+                                                </div>
+                                                <select v-model="filterStore.selectedModel" @change="updateFilter('model', filterStore.selectedModel)" id="model" name="model" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6">
+                                                    <option v-for="model in filterStore.models" :key="model.id" :value="model.id">
+                                                        {{ model.name }}
+                                                    </option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="flex flex-shrink-0 justify-between px-4 py-4">
@@ -69,7 +81,6 @@
 </template>
 
 <script setup>
-import {ref, defineProps, watch, onMounted} from 'vue';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import {useFilterStore} from "../../stores/filter.js";
 import {useCarStore} from "../../stores/car.js";
