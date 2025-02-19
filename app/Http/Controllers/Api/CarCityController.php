@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Storages\CarCityStorage;
 use Illuminate\Http\JsonResponse;
 
-class CityController extends Controller
+class CarCityController extends Controller
 {
     private CarCityStorage $carCityStorage;
 

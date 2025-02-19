@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Storages\CarBrandStorage;
 use Illuminate\Http\JsonResponse;
 
-class BrandController extends Controller
+class CarBrandController extends Controller
 {
     private CarBrandStorage $carBranStorage;
 
