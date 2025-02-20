@@ -6,9 +6,11 @@ import Car from '../Components/Home/Car.vue';
 import Filter from "../Components/Home/Filter.vue";
 import NothingToShow from "../Components/Home/NothingToShow.vue";
 import AccessDenied from "../Components/Home/AccessDenied.vue";
+import CarRequest from "../Components/Home/CarRequest.vue";
 import {useCarStore} from "../stores/car.js";
 import {useFilterStore} from "../stores/filter.js";
 import {useTelegramUserStore} from "../stores/telegramUser.js";
+import {useCarRequest} from "../stores/carRequest.js";
 //Телеграм web app
 const {$tg} = getCurrentInstance().appContext.config.globalProperties
 //Индикатор готовности страницы
@@ -21,6 +23,8 @@ const carStore = useCarStore();
 const filterStore = useFilterStore();
 //Хранилище для данных телеграм юзера
 const telegramUserStore = useTelegramUserStore();
+//Хранилище для заявок
+const carRequestStore = useCarRequest();
 
 onMounted(async () => {
     // Получаем данные пользователя из TelegramWebApp
@@ -72,7 +76,7 @@ const loadInitialData = async () => {
 
 <template>
     <!-- preloader -->
-    <div v-if="!isReady || filterStore.isLoading" class="fixed flex items-center justify-center w-full h-full bg-white z-20">
+    <div v-if="!isReady || filterStore.isLoading || carRequestStore.isLoading" class="fixed flex items-center justify-center w-full h-full bg-white z-20">
         <span class="spinner"></span>
     </div>
 
@@ -94,7 +98,8 @@ const loadInitialData = async () => {
         </div>
         <Filter/>
         <!-- Отображение автомобилей с использованием компонента Car -->
-        <Car v-if="carStore.cars.length > 0" v-for="car in carStore.cars" :key="car.id" :data="car"/>
+        <Car v-if="carStore.cars.length > 0" v-for="car in carStore.cars" :key="car.id" :car="car"/>
+        <!-- Иначе покажем блок что машины не найдены -->
         <NothingToShow v-else/>
         <!-- Кнопка показать ещё -->
         <div class="flex justify-center mb-4">
@@ -118,6 +123,8 @@ const loadInitialData = async () => {
                 <span v-else>Показать ещё</span>
             </button>
         </div>
+        <!-- Модалка с формой заявки -->
+        <CarRequest/>
     </div>
 
 </template>
