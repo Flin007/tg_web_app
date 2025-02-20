@@ -93,6 +93,7 @@ const nextStep = () => {
     carRequestStore.currentStep++;
 }
 const prevStep = () => {
+    carRequestStore.isNextStepBtnDisabled = false;
     if(0 === carRequestStore.currentStep) {
         return;
     }
