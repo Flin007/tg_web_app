@@ -10,6 +10,7 @@ Route::post('/webhook', WebhookController::class);
 
 //Создание заявки
 Route::post('/request/create', [CarRequestController::class, 'create']);
+Route::post('/request/update', [CarRequestController::class, 'update']);
 
 /** HOMEPAGE */
 Route::get('/', [HomeController::class, 'index'])->name('home');
