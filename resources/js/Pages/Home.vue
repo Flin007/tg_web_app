@@ -42,14 +42,11 @@ onMounted(async () => {
     }
 
     // Загружаем данные для HomeTitle
-    try {
-        const response = await fetch('/api/content/home-title');
-        if (response.ok) {
-            homeTitleData.value = await response.json();
-        }
-    } catch (error) {
-        console.error('Error fetching HomeTitle data:', error);
-    }
+    axios.get('/api/content/home-title').then(response => {
+        homeTitleData.value = response.data;
+    }).catch(error => {
+        console.error(error)
+    });
 
     //Загружаем необходимые данные
     await loadInitialData()
