@@ -9,6 +9,8 @@ export const useCarRequest = defineStore('carRequest', {
         isLoading: false,
         //Номер обращения
         requestId: null,
+        //Текущей номер этапа в заполнении заявки
+        currentStep: 0,
         //Выбранная машина
         selectedCar: {},
         //Берем ли в кредит?
@@ -51,6 +53,7 @@ export const useCarRequest = defineStore('carRequest', {
         },
         resetAll() {
             this.requestId = null;
+            this.currentStep = 0;
             this.selectedCar = {};
             this.shouldUseCredit = false;
             this.creditDeposit = 0;
