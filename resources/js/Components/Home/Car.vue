@@ -88,6 +88,7 @@ import {defineProps} from 'vue';
 import {Swiper, SwiperSlide} from 'swiper/vue';
 import {useCarRequest} from "../../stores/carRequest.js";
 import {useTelegramUserStore} from "../../stores/telegramUser.js";
+import {formatPrice} from "../../utils/formattingUtils.js";
 // import required modules
 import {Pagination} from 'swiper/modules';
 
@@ -107,13 +108,4 @@ const props = defineProps({
 
 const carRequestStore = useCarRequest();
 const telegramUserStore = useTelegramUserStore();
-
-// Функция для форматирования цены
-const formatPrice = (price) => {
-    // Преобразуем цену в целое число, убирая копейки, если они нулевые
-    const formatted = Math.floor(price);
-
-    // Форматируем число с разделителями тысяч
-    return formatted.toLocaleString('ru-RU');
-};
 </script>
