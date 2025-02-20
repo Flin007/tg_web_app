@@ -8,7 +8,7 @@
                     <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
                         <TransitionChild as="template" enter="transform transition ease-in-out duration-500 sm:duration-700" enter-from="translate-x-full" enter-to="translate-x-0" leave="transform transition ease-in-out duration-500 sm:duration-700" leave-from="translate-x-0" leave-to="translate-x-full">
                             <DialogPanel class="pointer-events-auto w-screen max-w-md">
-                                <form class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
+                                <form @submit.prevent class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
                                     <div class="h-0 flex-1 overflow-y-auto">
                                         <div class="bg-blue-700 px-4 py-6 sm:px-6">
                                             <div class="flex items-center justify-between">
@@ -26,15 +26,16 @@
                                             </div>
                                         </div>
                                         <div class="flex flex-1 flex-col justify-between m-4">
-                                            Тут будут формы
+                                            <Step0 v-if="carRequestStore.currentStep === 0"/>
+                                            <Step1 v-if="carRequestStore.currentStep === 1"/>
                                         </div>
                                     </div>
                                     <div class="flex flex-shrink-0 justify-between px-4 py-4">
                                         <!-- Кнопка назад -->
-                                        <button disabled
-                                                type="submit"
+                                        <button @click="prevStep"
+                                                :disabled="carRequestStore.currentStep === 0"
+                                                type="button"
                                                 class="disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-white rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                                                @click=""
                                         >
                                             Назад
                                         </button>
@@ -55,10 +56,12 @@
                                                 </li>
                                             </ol>
                                         </nav>
-                                        <!-- Кнопка далии или отправить -->
+                                        <!-- Кнопка далее или отправить -->
                                         <button
-                                            type="submit"
-                                            class="inline-flex justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                                            @click="nextStep"
+                                            :disabled="carRequestStore.isNextStepBtnDisabled"
+                                            :type="steps.length === carRequestStore.currentStep + 1 ? 'submit' : 'button'"
+                                            class="disabled:cursor-not-allowed disabled:opacity-30 inline-flex justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                                         >
                                             {{ steps.length === carRequestStore.currentStep+1 ? 'Отправить' : 'Далее'}}
                                         </button>
@@ -76,8 +79,26 @@
 import {computed} from 'vue';
 import {Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot} from "@headlessui/vue";
 import {useCarRequest} from "../../stores/carRequest";
+import Step0 from "../CarRequestSteps/Step0.vue";
+import Step1 from "../CarRequestSteps/Step1.vue";
 
 const carRequestStore = useCarRequest();
+
+const nextStep = () => {
+    if (steps.value.length === carRequestStore.currentStep+1){
+        //TODO: Отправка формы
+        return;
+    }
+    carRequestStore.updateData();
+    carRequestStore.currentStep++;
+}
+const prevStep = () => {
+    if(0 === carRequestStore.currentStep) {
+        return;
+    }
+    carRequestStore.currentStep--;
+}
+
 const steps = computed(() => [
     {
         id: 0,
@@ -86,8 +107,13 @@ const steps = computed(() => [
     },
     {
         id: 1,
-        title: 'Уже обрабатываем ваще обращение...',
+        title: 'Уже взяли в работу ваше обращение',
         description: 'Пока что выберете на каких условиях планируется приобретение автомобиля.',
+    },
+    {
+        id: 2,
+        title: 'Согласуем лучшее предложение!',
+        description: 'Оставьте свои контактные данные для обратной связи.',
     },
 ]);
 </script>
