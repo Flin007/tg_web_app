@@ -1,11 +1,23 @@
 import { defineStore } from 'pinia';
+import axios from "axios";
 
 export const useCarRequest = defineStore('carRequest', {
     state: () => ({
+        //Открыто ли окно
+        isOpen: false,
+        //Загружается ли окно
+        isLoading: false,
+        //Номер обращения
+        requestId: null,
+        //Выбранная машина
         selectedCar: {},
+        //Берем ли в кредит?
         shouldUseCredit: false,
+        //Первоначальный взнос
         creditDeposit: 0,
+        //Сдаем ли авто в трейдИн
         shouldUseTradeIn: false,
+        //Инфо о машине в трейдИн
         tradeInCar: {
             brand: null,
             model: null,
@@ -16,7 +28,27 @@ export const useCarRequest = defineStore('carRequest', {
         data: {}
     }),
     actions: {
+        async createRequest(car, userId) {
+            if (!car || !userId) {
+                return;
+            }
+            this.isLoading = true;
+            this.resetAll();
+            this.selectedCar = car;
+
+            //Пробуем создать реквест в бд
+            try {
+                const result = await axios.post('/request/create', {car_id: car.id, user_id: userId});
+                this.requestId = result.data.id;
+                this.isOpen = true;
+            } catch (e) {
+                this.isOpen = false;
+            } finally {
+                this.isLoading = false;
+            }
+        },
         resetAll() {
+            this.requestId = null;
             this.selectedCar = {};
             this.shouldUseCredit = false;
             this.creditDeposit = 0;
@@ -29,6 +61,7 @@ export const useCarRequest = defineStore('carRequest', {
         },
         updateData() {
             this.data = {
+                requestId: this.requestId,
                 selectedCar: this.selectedCar,
                 useCredit: this.shouldUseCredit,
                 creditDeposit: this.creditDeposit,
