@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from "axios";
+import {data} from "autoprefixer";
 
 export const useCarRequest = defineStore('carRequest', {
     state: () => ({
@@ -7,12 +8,16 @@ export const useCarRequest = defineStore('carRequest', {
         isOpen: false,
         //Загружается ли окно
         isLoading: false,
+        //Можно ли жать кнопку далее
+        isNextStepBtnDisabled: false,
         //Номер обращения
         requestId: null,
         //Текущей номер этапа в заполнении заявки
         currentStep: 0,
         //Выбранная машина
         selectedCar: {},
+        //Тип покупки авто
+        purchasingOption: null,
         //Берем ли в кредит?
         shouldUseCredit: false,
         //Первоначальный взнос
@@ -42,7 +47,7 @@ export const useCarRequest = defineStore('carRequest', {
             try {
                 //const result = await axios.post('/request/create', {car_id: car.id, user_id: userId});
                 //TODO: для теста что б не спамить каждый раз в бд
-                const result = {data:{id:123}};
+                const result = {data:{id:1}};
                 this.requestId = result.data.id;
                 this.isOpen = true;
             } catch (e) {
@@ -54,7 +59,9 @@ export const useCarRequest = defineStore('carRequest', {
         resetAll() {
             this.requestId = null;
             this.currentStep = 0;
+            this.isNextStepBtnDisabled = false;
             this.selectedCar = {};
+            this.purchasingOption = null;
             this.shouldUseCredit = false;
             this.creditDeposit = 0;
             this.shouldUseTradeIn = false;
@@ -66,13 +73,15 @@ export const useCarRequest = defineStore('carRequest', {
         },
         updateData() {
             this.data = {
-                requestId: this.requestId,
-                selectedCar: this.selectedCar,
-                useCredit: this.shouldUseCredit,
+                selectedCarId: this.selectedCar.id,
+                purchasingOption: this.purchasingOption,
+                shouldUseCredit: this.shouldUseCredit,
                 creditDeposit: this.creditDeposit,
-                useTradeIn: this.shouldUseTradeIn,
+                shouldUseTradeIn: this.shouldUseTradeIn,
                 tradeInCar: this.tradeInCar
             };
+            //TODO: вернуть синхронизацию перед релизом
+            //axios.post('/request/update', {request_id: this.requestId, data: JSON.stringify(this.data)});
         }
     }
 });
