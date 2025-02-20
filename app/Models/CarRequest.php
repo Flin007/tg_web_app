@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
@@ -33,5 +34,13 @@ class CarRequest extends Model
             self::STATUS_IN_PROGRESS => 'В процессе',
             self::STATUS_COMPLETED => 'Завершено',
         ];
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(TelegramUser::class, 'user_id', 'user_id');
     }
 }
