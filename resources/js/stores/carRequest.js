@@ -38,7 +38,9 @@ export const useCarRequest = defineStore('carRequest', {
 
             //Пробуем создать реквест в бд
             try {
-                const result = await axios.post('/request/create', {car_id: car.id, user_id: userId});
+                //const result = await axios.post('/request/create', {car_id: car.id, user_id: userId});
+                //TODO: для теста что б не спамить каждый раз в бд
+                const result = {data:{id:123}};
                 this.requestId = result.data.id;
                 this.isOpen = true;
             } catch (e) {
