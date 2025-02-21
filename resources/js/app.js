@@ -7,6 +7,9 @@ import TelegramWebApp from '@twa-dev/sdk';
 //Хранилище для удобной подгрузки авто и рендера
 import { createPinia } from 'pinia';
 const pinia = createPinia();
+//Уведомления
+import Vue3Toastify from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 createInertiaApp({
     resolve: name => {
@@ -21,6 +24,13 @@ createInertiaApp({
         VueApp.config.globalProperties.$tg = tg;
         // Вызываем tg.ready() для инициализации
         tg.ready();
+
+        // Плагин для уведомлений
+        VueApp.use(Vue3Toastify,{
+            autoClose: 2000,
+            "position": "top-right",
+            "newestOnTop": true
+        });
 
         // Остальные плагины и компоненты
         VueApp.use(plugin)
