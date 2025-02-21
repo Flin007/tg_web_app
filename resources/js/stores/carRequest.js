@@ -31,6 +31,13 @@ export const useCarRequest = defineStore('carRequest', {
             year: null,
             vin: null,
         },
+        //Контакты клиента
+        contacts: {
+            name: '',
+            surname: '',
+            phone: '',
+            email: ''
+        },
         //Для удобной отправки на бэк
         data: {}
     }),
@@ -45,9 +52,9 @@ export const useCarRequest = defineStore('carRequest', {
 
             //Пробуем создать реквест в бд
             try {
-                //const result = await axios.post('/request/create', {car_id: car.id, user_id: userId});
+                const result = await axios.post('/request/create', {car_id: car.id, user_id: userId});
                 //TODO: для теста что б не спамить каждый раз в бд
-                const result = {data:{id:1}};
+                //const result = {data:{id:1}};
                 this.requestId = result.data.id;
                 this.isOpen = true;
             } catch (e) {
@@ -69,6 +76,10 @@ export const useCarRequest = defineStore('carRequest', {
             this.tradeInCar.model = null;
             this.tradeInCar.year = null;
             this.tradeInCar.vin = null;
+            this.contacts.name = null;
+            this.contacts.surname = null;
+            this.contacts.phone = null;
+            this.contacts.email = null;
             this.data = {};
         },
         updateData() {
@@ -77,10 +88,11 @@ export const useCarRequest = defineStore('carRequest', {
                 purchasingOption: this.purchasingOption,
                 creditDeposit: this.creditDeposit,
                 shouldUseTradeIn: this.shouldUseTradeIn,
-                tradeInCar: this.tradeInCar
+                tradeInCar: this.tradeInCar,
+                contacts: this.contacts
             };
             //TODO: вернуть синхронизацию перед релизом
-            //axios.post('/request/update', {request_id: this.requestId, data: JSON.stringify(this.data)});
+            axios.post('/request/update', {request_id: this.requestId, data: JSON.stringify(this.data), finished: false});
         }
     }
 });

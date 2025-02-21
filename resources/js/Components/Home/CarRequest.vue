@@ -29,6 +29,7 @@
                                             <Step0 v-if="carRequestStore.currentStep === 0"/>
                                             <Step1 v-if="carRequestStore.currentStep === 1"/>
                                             <Step2 v-if="carRequestStore.currentStep === 2"/>
+                                            <Step3 v-if="carRequestStore.currentStep === 3"/>
                                         </div>
                                     </div>
                                     <div class="flex flex-shrink-0 justify-between px-4 py-4">
@@ -80,17 +81,22 @@
 import {computed} from 'vue';
 import {Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot} from "@headlessui/vue";
 import {useCarRequest} from "../../stores/carRequest";
+import {toast} from "vue3-toastify";
 import Step0 from "../CarRequestSteps/Step0.vue";
 import Step1 from "../CarRequestSteps/Step1.vue";
 import Step2 from "../CarRequestSteps/Step2.vue";
+import Step3 from "../CarRequestSteps/Step3.vue";
 
 const carRequestStore = useCarRequest();
 
 const nextStep = () => {
+    //Отправка формы
     if (steps.value.length === carRequestStore.currentStep+1){
-        //TODO: Отправка формы
+        sendResults();
+        carRequestStore.isOpen = false;
         return;
     }
+    //переключение страницы
     carRequestStore.updateData();
     carRequestStore.prevStep = carRequestStore.currentStep;
     carRequestStore.currentStep++;
@@ -126,4 +132,19 @@ const steps = computed(() => [
         description: 'Оставьте свои контактные данные для обратной связи.',
     },
 ]);
+
+//Отправим финальное обновление
+const sendResults = () => {
+    axios.post('/request/update', {
+        request_id: carRequestStore.requestId,
+        data: JSON.stringify(carRequestStore.data),
+        finished: true
+    })
+        .then(response => {
+            toast.success('Мы получили ваше обращение');
+        })
+        .catch(error => {
+            console.error(error)
+        });
+}
 </script>
