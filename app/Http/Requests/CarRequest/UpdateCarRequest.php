@@ -20,6 +20,7 @@ class UpdateCarRequest extends FormRequest
                     $fail('The '.$attribute.' must be a valid JSON string.');
                 }
             }],
+            'finished' => 'boolean|required',
         ];
     }
 
@@ -32,6 +33,7 @@ class UpdateCarRequest extends FormRequest
             'required' => 'Обязательное поле :attribute отсутствует',
             'integer' => 'Поле :attribute должно быть числовым',
             'string' => 'Поле :attribute должно быть строкой',
+            'boolean' => 'Поле :attribute должно быть логическим',
         ];
     }
 
@@ -49,5 +51,13 @@ class UpdateCarRequest extends FormRequest
     public function getRequestData(): string
     {
         return (string)$this->input('data');
+    }
+
+    /**
+     * @return bool
+     */
+    public function getFinished(): bool
+    {
+        return (bool)$this->input('finished');
     }
 }
