@@ -65,7 +65,7 @@ class StartCommand extends Command
                 [
                     [
                         'text' => 'Запустить Web App',
-                        'web_app' => ['url' => 'https://b90f-150-241-94-184.ngrok-free.app']
+                        'web_app' => ['url' => 'https://t3zusauto.ru/']
                     ],
                 ],
             ],
