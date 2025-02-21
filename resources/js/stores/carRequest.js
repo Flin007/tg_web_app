@@ -14,12 +14,12 @@ export const useCarRequest = defineStore('carRequest', {
         requestId: null,
         //Текущей номер этапа в заполнении заявки
         currentStep: 0,
+        //Предыдущий номер этапа
+        prevStep: 0,
         //Выбранная машина
         selectedCar: {},
         //Тип покупки авто
         purchasingOption: null,
-        //Берем ли в кредит?
-        shouldUseCredit: false,
         //Первоначальный взнос
         creditDeposit: 0,
         //Сдаем ли авто в трейдИн
@@ -59,10 +59,10 @@ export const useCarRequest = defineStore('carRequest', {
         resetAll() {
             this.requestId = null;
             this.currentStep = 0;
+            this.prevStep = 0;
             this.isNextStepBtnDisabled = false;
             this.selectedCar = {};
             this.purchasingOption = null;
-            this.shouldUseCredit = false;
             this.creditDeposit = 0;
             this.shouldUseTradeIn = false;
             this.tradeInCar.brand = null;
@@ -75,7 +75,6 @@ export const useCarRequest = defineStore('carRequest', {
             this.data = {
                 selectedCarId: this.selectedCar.id,
                 purchasingOption: this.purchasingOption,
-                shouldUseCredit: this.shouldUseCredit,
                 creditDeposit: this.creditDeposit,
                 shouldUseTradeIn: this.shouldUseTradeIn,
                 tradeInCar: this.tradeInCar

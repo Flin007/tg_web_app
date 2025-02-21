@@ -28,6 +28,7 @@
                                         <div class="flex flex-1 flex-col justify-between m-4">
                                             <Step0 v-if="carRequestStore.currentStep === 0"/>
                                             <Step1 v-if="carRequestStore.currentStep === 1"/>
+                                            <Step2 v-if="carRequestStore.currentStep === 2"/>
                                         </div>
                                     </div>
                                     <div class="flex flex-shrink-0 justify-between px-4 py-4">
@@ -81,6 +82,7 @@ import {Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot} from 
 import {useCarRequest} from "../../stores/carRequest";
 import Step0 from "../CarRequestSteps/Step0.vue";
 import Step1 from "../CarRequestSteps/Step1.vue";
+import Step2 from "../CarRequestSteps/Step2.vue";
 
 const carRequestStore = useCarRequest();
 
@@ -90,6 +92,7 @@ const nextStep = () => {
         return;
     }
     carRequestStore.updateData();
+    carRequestStore.prevStep = carRequestStore.currentStep;
     carRequestStore.currentStep++;
 }
 const prevStep = () => {
@@ -97,6 +100,7 @@ const prevStep = () => {
     if(0 === carRequestStore.currentStep) {
         return;
     }
+    carRequestStore.prevStep = carRequestStore.currentStep;
     carRequestStore.currentStep--;
 }
 
@@ -113,6 +117,11 @@ const steps = computed(() => [
     },
     {
         id: 2,
+        title: 'Выбиваем лучшие условия',
+        description: 'Нужно ещё немного информации для подсчета всех скидок.',
+    },
+    {
+        id: 3,
         title: 'Согласуем лучшее предложение!',
         description: 'Оставьте свои контактные данные для обратной связи.',
     },
