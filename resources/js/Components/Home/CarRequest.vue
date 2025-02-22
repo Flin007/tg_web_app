@@ -140,9 +140,7 @@ const sendResults = () => {
         data: JSON.stringify(carRequestStore.data),
         finished: true
     })
-        .then(response => {
-            toast.success('Мы получили ваше обращение');
-        })
+        .then(() => toast.success('Мы получили ваше обращение'))
         .catch(error => {
             console.error(error)
         });
