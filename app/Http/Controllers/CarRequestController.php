@@ -32,9 +32,16 @@ class CarRequestController
         try {
             /** @var CarRequest $carRequest */
             $carRequest = CarRequest::query()->where('id', $request->getRequestId())->firstOrFail();
-            $carRequest->update(['data' => $request->getRequestData()]);
+            $carRequest->update([
+                'data' => $request->getRequestData(),
+                'status' => CarRequest::STATUS_IN_PROGRESS
+            ]);
 
             if ($request->getFinished()) {
+                //Поставим статус завершенного обращения
+                $carRequest->update([
+                    'status' => CarRequest::STATUS_IN_PROGRESS
+                ]);
                 $selectedCarId = json_decode($request->getRequestData())->selectedCarId;
                 $text = "<b>Номер обращения #".$carRequest->id."</b>";
                 $text .= "\nСпасибо, мы свяжемся с вами в ближайшее время.";
