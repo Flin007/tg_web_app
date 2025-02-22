@@ -35,9 +35,13 @@ class CarRequestController
             $carRequest->update(['data' => $request->getRequestData()]);
 
             if ($request->getFinished()) {
+                $selectedCarId = json_decode($request->getRequestData())->selectedCarId;
+                $text = "<b>Номер обращения #".$carRequest->id."</b>";
+                $text .= "\nСпасибо, мы свяжемся с вами в ближайшее время.";
+                $text .= "\n<a href='https://t.me/t3zusauto_bot?startapp=car_".$selectedCarId."'>Выбранный автомобиль</a>";
                 Telegram::bot()->sendMessage([
                     'chat_id' => $carRequest->user_id,
-                    'text' => "Спасибо, мы получили ваше обращение. Его уникальный номер #".$carRequest->id,
+                    'text' => $text,
                     'parse_mode' => 'HTML'
                 ]);
             }
