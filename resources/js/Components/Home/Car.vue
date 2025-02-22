@@ -70,7 +70,7 @@
                 </div>
 
                 <!-- Спецпредложение -->
-                <button @click="carRequestStore.createRequest(car, telegramUserStore.user.id)"
+                <button @click="createRequest"
                    class="inline-block py-3 px-6 mt-4 border border-gray-500"
                 >
                     Получить спецпредложение
@@ -89,6 +89,7 @@ import {Swiper, SwiperSlide} from 'swiper/vue';
 import {useCarRequest} from "../../stores/carRequest.js";
 import {useTelegramUserStore} from "../../stores/telegramUser.js";
 import {formatPrice} from "../../utils/formattingUtils.js";
+import {toast} from "vue3-toastify";
 // import required modules
 import {Pagination} from 'swiper/modules';
 
@@ -108,4 +109,11 @@ const props = defineProps({
 
 const carRequestStore = useCarRequest();
 const telegramUserStore = useTelegramUserStore();
+
+const createRequest = async () => {
+    let res = await carRequestStore.createRequest(props.car, telegramUserStore.user.id);
+    if (!res) {
+        toast.error('Произошла ошибка при получении данных')
+    }
+}
 </script>

@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import axios from "axios";
-import {data} from "autoprefixer";
 
 export const useCarRequest = defineStore('carRequest', {
     state: () => ({
@@ -43,25 +42,26 @@ export const useCarRequest = defineStore('carRequest', {
     }),
     actions: {
         async createRequest(car, userId) {
-            if (!car || !userId) {
-                return;
-            }
-            this.isLoading = true;
+            //Сбрасываем все данные забитые ранее и устанавливаем машину с которой нажали на кнопку
             this.resetAll();
             this.selectedCar = car;
 
-            //Пробуем создать реквест в бд
-            try {
-                const result = await axios.post('/request/create', {car_id: car.id, user_id: userId});
-                //TODO: для теста что б не спамить каждый раз в бд
-                //const result = {data:{id:1}};
-                this.requestId = result.data.id;
-                this.isOpen = true;
-            } catch (e) {
-                this.isOpen = false;
-            } finally {
-                this.isLoading = false;
-            }
+            //Открывем модалку
+            this.isOpen = true;
+
+            //Для отладки что б не слать запросы
+            //this.requestId = 1;
+
+            //Отправим создаваться обращение
+            return axios.post('/request/create', {car_id: car.id, user_id: userId})
+                .then(response => {
+                    this.requestId = response.data.id;
+                    return true;
+                })
+                .catch(() => {
+                    this.isOpen = false
+                    return false;
+                })
         },
         resetAll() {
             this.requestId = null;
@@ -83,6 +83,10 @@ export const useCarRequest = defineStore('carRequest', {
             this.data = {};
         },
         updateData() {
+            //Если id обращения ещё не пришло, данные не синхронизируем с бд
+            if (null === this.requestId) {
+                return;
+            }
             this.data = {
                 selectedCarId: this.selectedCar.id,
                 purchasingOption: this.purchasingOption,
@@ -91,7 +95,6 @@ export const useCarRequest = defineStore('carRequest', {
                 tradeInCar: this.tradeInCar,
                 contacts: this.contacts
             };
-            //TODO: вернуть синхронизацию перед релизом
             axios.post('/request/update', {request_id: this.requestId, data: JSON.stringify(this.data), finished: false});
         }
     }
