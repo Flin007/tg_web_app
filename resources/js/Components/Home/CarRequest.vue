@@ -14,7 +14,7 @@
                                             <div class="flex items-center justify-between">
                                                 <DialogTitle class="text-base font-semibold leading-6 text-white">{{ steps[carRequestStore.currentStep].title }}</DialogTitle>
                                                 <div class="ml-3 flex h-7 items-center">
-                                                    <button type="button" class="relative rounded-md bg-blue-700 text-blue-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white" @click="carRequestStore.isOpen = false">
+                                                    <button type="button" class="relative rounded-md bg-blue-700 text-blue-200 hover:text-white" @click="carRequestStore.isOpen = false">
                                                         <span class="absolute -inset-2.5 outline-none" />
                                                         <span class="sr-only">Close panel</span>
                                                         <svg fill="#fff" width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M192 233.4L59.5 100.9 36.9 123.5 169.4 256 36.9 388.5l22.6 22.6L192 278.6 324.5 411.1l22.6-22.6L214.6 256 347.1 123.5l-22.6-22.6L192 233.4z"/></svg>
