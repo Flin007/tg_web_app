@@ -119,7 +119,7 @@ class Car extends Model
         return substr($vin, 0, 7) . '*' . substr($vin, 8, 2) . '****' . substr($vin, -2);
     }
 
-    public const AVAILABLE_FILTERS = ['city', 'brand', 'model'];
+    public const AVAILABLE_FILTERS = ['car', 'city', 'brand', 'model'];
 
     /**
      * Фильтруем машины по переданным параметрам
@@ -131,16 +131,20 @@ class Car extends Model
      */
     public function scopeFilter(Builder $query, array $filters): void
     {
+        //Фильтруем id
+        if (isset($filters['car'])) {
+            $query->where('id', $filters['car']);
+        }
         //Фильтруем city
-        if (isset($filters['city']) ?? false) {
+        if (isset($filters['city'])) {
             $query->where('city_id', $filters['city']);
         }
         //Фильтруем brand
-        if (isset($filters['brand']) ?? false) {
+        if (isset($filters['brand'])) {
             $query->where('brand_id', $filters['brand']);
         }
         //Фильтруем model
-        if (isset($filters['model']) ?? false) {
+        if (isset($filters['model'])) {
             $query->where('model_id', $filters['model']);
         }
     }

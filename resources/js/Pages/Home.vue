@@ -48,6 +48,14 @@ onMounted(async () => {
         console.error(error)
     });
 
+    // Получаем параметры из URL
+    const startParam = $tg.initDataUnsafe.start_param;
+    //Проверяем передан ли id машины
+    if (startParam && startParam.startsWith('car_')) {
+        const carId = startParam.replace('car_', '');
+        carStore.setFilter('car', carId);
+    }
+
     //Загружаем необходимые данные
     await loadInitialData()
 
