@@ -9,22 +9,22 @@
                         <TransitionChild as="template" enter="transform transition ease-in-out duration-500 sm:duration-700" enter-from="translate-x-full" enter-to="translate-x-0" leave="transform transition ease-in-out duration-500 sm:duration-700" leave-from="translate-x-0" leave-to="translate-x-full">
                             <DialogPanel class="pointer-events-auto w-screen max-w-md">
                                 <form @submit.prevent class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
-                                    <div class="h-0 flex-1 overflow-y-auto">
-                                        <div class="bg-blue-700 px-4 py-6 sm:px-6">
-                                            <div class="flex items-center justify-between">
-                                                <DialogTitle class="text-base font-semibold leading-6 text-white">{{ steps[carRequestStore.currentStep].title }}</DialogTitle>
-                                                <div class="ml-3 flex h-7 items-center">
-                                                    <button type="button" class="relative rounded-md bg-blue-700 text-blue-200 hover:text-white" @click="carRequestStore.isOpen = false">
-                                                        <span class="absolute -inset-2.5 outline-none" />
-                                                        <span class="sr-only">Close panel</span>
-                                                        <svg fill="#fff" width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M192 233.4L59.5 100.9 36.9 123.5 169.4 256 36.9 388.5l22.6 22.6L192 278.6 324.5 411.1l22.6-22.6L214.6 256 347.1 123.5l-22.6-22.6L192 233.4z"/></svg>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="mt-1">
-                                                <p class="text-sm text-blue-300">{{ steps[carRequestStore.currentStep].description }}</p>
+                                    <div class="bg-blue-700 px-4 py-4 sm:px-4">
+                                        <div class="flex items-center justify-between">
+                                            <DialogTitle class="text-base font-semibold leading-6 text-white">{{ steps[carRequestStore.currentStep].title }}</DialogTitle>
+                                            <div class="ml-3 flex h-7 items-center">
+                                                <button type="button" class="relative rounded-md bg-blue-700 text-blue-200 hover:text-white" @click="carRequestStore.isOpen = false">
+                                                    <span class="absolute -inset-2.5 outline-none" />
+                                                    <span class="sr-only">Close panel</span>
+                                                    <svg fill="#fff" width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M192 233.4L59.5 100.9 36.9 123.5 169.4 256 36.9 388.5l22.6 22.6L192 278.6 324.5 411.1l22.6-22.6L214.6 256 347.1 123.5l-22.6-22.6L192 233.4z"/></svg>
+                                                </button>
                                             </div>
                                         </div>
+                                        <div class="mt-1">
+                                            <p class="text-sm text-blue-300">{{ steps[carRequestStore.currentStep].description }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="h-0 flex-1 overflow-y-auto">
                                         <div class="flex flex-1 flex-col justify-between m-4">
                                             <Step0 v-if="carRequestStore.currentStep === 0"/>
                                             <Step1 v-if="carRequestStore.currentStep === 1"/>
