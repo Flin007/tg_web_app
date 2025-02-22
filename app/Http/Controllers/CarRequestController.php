@@ -43,7 +43,7 @@ class CarRequestController
             if ($request->getFinished()) {
                 //Поставим статус завершенного обращения
                 $carRequest->update([
-                    'status' => CarRequest::STATUS_IN_PROGRESS
+                    'status' => CarRequest::STATUS_COMPLETED
                 ]);
                 $selectedCarId = json_decode($request->getRequestData())->selectedCarId;
                 $text = "<b>Номер обращения #".$carRequest->id."</b>";
