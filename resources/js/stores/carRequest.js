@@ -3,6 +3,8 @@ import axios from "axios";
 
 export const useCarRequest = defineStore('carRequest', {
     state: () => ({
+        //Telegram userId
+        telegramUserId: null,
         //Открыто ли окно
         isOpen: false,
         //Загружается ли окно
@@ -42,6 +44,8 @@ export const useCarRequest = defineStore('carRequest', {
     }),
     actions: {
         async createRequest(car, userId) {
+            //Устанавливаем telegramUserId
+            this.telegramUserId = userId;
             //Сбрасываем все данные забитые ранее и устанавливаем машину с которой нажали на кнопку
             this.resetAll();
             this.selectedCar = car;
@@ -88,6 +92,7 @@ export const useCarRequest = defineStore('carRequest', {
                 return;
             }
             this.data = {
+                telegramUserId: this.telegramUserId,
                 selectedCarId: this.selectedCar.id,
                 purchasingOption: this.purchasingOption,
                 creditDeposit: this.creditDeposit,

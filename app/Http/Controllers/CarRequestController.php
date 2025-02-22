@@ -31,7 +31,10 @@ class CarRequestController
     {
         try {
             /** @var CarRequest $carRequest */
-            $carRequest = CarRequest::query()->where('id', $request->getRequestId())->firstOrFail();
+            $carRequest = CarRequest::query()
+                ->where('id', $request->getRequestId())
+                ->where('user_id', json_decode($request->getRequestData())->telegramUserId)
+                ->firstOrFail();
             $carRequest->update([
                 'data' => $request->getRequestData(),
                 'status' => CarRequest::STATUS_IN_PROGRESS
