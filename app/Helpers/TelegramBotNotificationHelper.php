@@ -14,7 +14,7 @@ final class TelegramBotNotificationHelper
         $message = $title;
         $message .= PHP_EOL . json_encode($webhook, JSON_UNESCAPED_UNICODE);
         $bot->sendMessage([
-            'chat_id' => env('ERRORS_CHAT_ID'),
+            'chat_id' => env('LOGS_TELEGRAM_GROUP_ID'),
             'text' => $message,
         ]);
     }
