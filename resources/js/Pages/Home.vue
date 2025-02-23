@@ -27,16 +27,19 @@ const telegramUserStore = useTelegramUserStore();
 const carRequestStore = useCarRequest();
 
 onMounted(async () => {
-    // Получаем данные пользователя из TelegramWebApp
+    // Проверяем данные полученные с тг
     if ($tg && $tg.initDataUnsafe && $tg.initDataUnsafe.user) {
         //Сетим телеграм юзера в стор
         telegramUserStore.setUser($tg.initDataUnsafe.user);
-        //Проверяем доступ юзера
-        await telegramUserStore.checkTelegramUserStatus();
+        //Сразу отправим запрос на проверку доступа юзера, пока идет верификация
+        await checkUserAccess(window.Telegram.WebApp.initData);
+    } else {
+        isReady.value = true;
+        return;
     }
 
-    //Если доступ запрещён нет смысла получать данные для фронта
-    if (telegramUserStore.accessDenied) {
+    //Значит неверные параметры или у юзера нет доступа
+    if (!telegramUserStore.isValidData || telegramUserStore.accessDenied) {
         isReady.value = true;
         return;
     }
@@ -57,7 +60,7 @@ onMounted(async () => {
     }
 
     //Загружаем необходимые данные
-    await loadInitialData()
+    await loadInitialData();
 
     // Устанавливаем флаг готовности после завершения всех операций
     isReady.value = true;
@@ -77,6 +80,14 @@ const loadInitialData = async () => {
     ]);
 };
 
+//Проверяем данные от тг и доступ юзера
+const checkUserAccess = async (initData) => {
+    await Promise.all([
+        telegramUserStore.checkTelegramUserStatus(),
+        telegramUserStore.verifyInitialData(initData)
+    ]);
+}
+
 </script>
 
 <template>
@@ -87,7 +98,7 @@ const loadInitialData = async () => {
 
 
     <!-- Если доступ запрещен, показываем только этот блок -->
-    <AccessDenied v-if="telegramUserStore.accessDenied"/>
+    <AccessDenied v-if="telegramUserStore.accessDenied || !telegramUserStore.isValidData"/>
 
     <!-- Тут уже отрисуем основное приложение -->
     <div v-else v-if="isReady">
