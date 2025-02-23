@@ -1,16 +1,11 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\TelegramUser;
+use App\Helpers\TelegramBotNotificationHelper;
 use App\Repositories\TelegramUsersRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Telegram\Bot\BotsManager;
 use Telegram\Bot\Exceptions\TelegramSDKException;
-use Telegram\Bot\Laravel\Facades\Telegram;
-use Telegram\Bot\Objects\CallbackQuery;
-use Telegram\Bot\Objects\Message;
-use Telegram\Bot\Objects\Payments\PreCheckoutQuery;
-use Telegram\Bot\Objects\Update;
 
 class WebhookController extends Controller
 {
@@ -34,7 +29,11 @@ class WebhookController extends Controller
      */
     public function __invoke(Request $request): Response
     {
-        $this->botsManager->bot()->commandsHandler(true);
+        $webhook = $this->botsManager->bot()->commandsHandler(true);
+
+        //Логируем все вебхуки, не связанные с командой
+        TelegramBotNotificationHelper::sendLog('Логируем всё', $webhook);
+
         return response(null, 200);
     }
 }
