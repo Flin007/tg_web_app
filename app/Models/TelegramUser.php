@@ -31,6 +31,32 @@ class TelegramUser extends Model
     protected $table = 'telegram_users';
 
     protected $fillable = [
-        'user_id', 'username', 'first_name', 'last_name', 'is_premium', 'is_bot', 'is_active', 'is_blocked',
+        'user_id',
+        'username',
+        'first_name',
+        'last_name',
+        'is_premium',
+        'is_bot',
+        'is_blocked',
+        'status',
     ];
+
+    // Константы для статусов
+    const STATUS_MEMBER = 'member';
+    const STATUS_LEFT = 'left';
+    const STATUS_KICKED = 'kicked';
+
+    /**
+     * Получить список доступных статусов.
+     *
+     * @return array
+     */
+    public static function getStatuses(): array
+    {
+        return [
+            self::STATUS_MEMBER => 'Member',
+            self::STATUS_LEFT => 'Left',
+            self::STATUS_KICKED => 'Kicked',
+        ];
+    }
 }

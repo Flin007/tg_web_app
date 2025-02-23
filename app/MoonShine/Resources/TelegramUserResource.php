@@ -47,7 +47,7 @@ class TelegramUserResource extends ModelResource
             Text::make('Фамилия','last_name'),
             Checkbox::make('Премиум?', 'is_premium'),
             Checkbox::make('Бот?', 'is_bot'),
-            Checkbox::make('Статус', 'is_active'),
+            Text::make('Статус', 'status'),
             Checkbox::make('Заблокирован?', 'is_blocked'),
         ];
     }
