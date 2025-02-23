@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\TelegramUserDataValidator;
 use App\Http\Controllers\Controller;
 use App\Models\TelegramUser;
 use App\Repositories\TelegramUsersRepository;
@@ -34,6 +35,22 @@ class TelegramController extends Controller
             return new JsonResponse('User is blocked', 403);
         }
 
-        return new JsonResponse('true');
+        return new JsonResponse(true);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function verify(Request $request): JsonResponse
+    {
+        $result = TelegramUserDataValidator::isSafe(env('TELEGRAM_BOT_TOKEN'), $request->getContent());
+
+        if ($result) {
+            return new JsonResponse(true);
+        } else {
+            return new JsonResponse('Bad Initial Data', 401);
+        }
     }
 }

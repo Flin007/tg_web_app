@@ -28,5 +28,6 @@ Route::prefix('telegram')->group(function () {
     // Группировка роутов, связанных с пользователями в Telegram
     Route::prefix('user')->group(function () {
         Route::get('/checkStatus', [TelegramController::class, 'checkUserStatus']);
+        Route::post('/verify', [TelegramController::class, 'verify']);
     });
 });
