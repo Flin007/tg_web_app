@@ -18,24 +18,33 @@ class TelegramController extends Controller
         $this->telegramUsersRepository = $telegramUsersRepository;
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function checkUserStatus(Request $request): JsonResponse
+    public function checkUserData(Request $request): JsonResponse
     {
-        /** @var TelegramUser $telegramUser */
-        $telegramUser = $this->telegramUsersRepository->findOneUserByUserId($request->get('user_id'));
-        if (!$telegramUser) {
-            return new JsonResponse('User not found', 404);
+        $initialData = json_decode($request->getContent());
+        if (!isset($initialData->user)){
+            return new JsonResponse('Bad initial data', 400);
         }
 
-        if ($telegramUser->is_blocked) {
-            return new JsonResponse('User is blocked', 403);
+        /** @var TelegramUser|null $telegramUser */
+        $telegramUser = $this->telegramUsersRepository->findOneUserByUserId($initialData->user->id);
+        if (!$telegramUser){
+            $telegramUser = $this->telegramUsersRepository->createUserFromCheckUserData((array)$initialData->user);
         }
 
-        return new JsonResponse(true);
+        $result = [
+            'id' => $telegramUser->user_id,
+            'username' => $telegramUser->username,
+            'first_name' => $telegramUser->first_name,
+            'last_name' => $telegramUser->last_name,
+            'is_premium' => $telegramUser->is_premium,
+            'is_blocked' => $telegramUser->is_blocked,
+            'status' => $telegramUser->status,
+            'language_code' => $initialData->user->language_code,
+            'photo_url' => $initialData->user->photo_url,
+
+        ];
+
+        return new JsonResponse($result);
     }
 
     /**

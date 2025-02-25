@@ -12,14 +12,6 @@ export const useTelegramUserStore = defineStore('telegramUser', {
         setUser(user) {
             this.user = user;
         },
-        async checkTelegramUserStatus(){
-            try{
-                await axios.get(`/api/telegram/user/checkStatus?user_id=${this.user.id}`);
-                this.accessDenied = false;
-            } catch (error) {
-                console.log(error)
-            }
-        },
         async verifyInitialData(initData){
             try{
                 await axios.post('api/telegram/user/verify', initData)

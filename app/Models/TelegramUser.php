@@ -20,7 +20,7 @@ use Illuminate\Support\Carbon;
  * @property boolean $is_admin админ? Пока не юзаю
  * @property boolean $is_premium есть ли премиум
  * @property boolean $is_bot является ли юзер ботом?
- * @property boolean $is_active Вышел ли из бота, можно ли ему писать?
+ * @property boolean $status Вышел ли из бота, можно ли ему писать?
  * @property boolean $is_blocked Заблокирован ли в приложении
  * @property Carbon $created_at
  * @property Carbon $updated_at

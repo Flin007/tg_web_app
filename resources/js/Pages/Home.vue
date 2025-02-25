@@ -27,19 +27,40 @@ const telegramUserStore = useTelegramUserStore();
 const carRequestStore = useCarRequest();
 
 onMounted(async () => {
-    // Проверяем данные полученные с тг
-    if ($tg && $tg.initDataUnsafe && $tg.initDataUnsafe.user) {
-        //Сетим телеграм юзера в стор
-        telegramUserStore.setUser($tg.initDataUnsafe.user);
-        //Сразу отправим запрос на проверку доступа юзера, пока идет верификация
-        await checkUserAccess(window.Telegram.WebApp.initData);
-    } else {
+    // Проверим есть ли данные из ТГ
+    if (!window.Telegram.WebApp.initData) {
         isReady.value = true;
         return;
     }
 
-    //Значит неверные параметры или у юзера нет доступа
-    if (!telegramUserStore.isValidData || telegramUserStore.accessDenied) {
+    //Проверим валидные ли данные нам пришли
+    await telegramUserStore.verifyInitialData(window.Telegram.WebApp.initData);
+    if (!telegramUserStore.isValidData) {
+        isReady.value = true;
+        return;
+    }
+
+    //Ищем юзера, если его нет, создаем из переданных данных и возвращаем данные юзера, которые точно есть в бд
+    const userResult = await axios.post('/api/telegram/user/checkUserData', window.Telegram.WebApp.initDataUnsafe);
+    if (userResult.status !== 200) {
+        isReady.value = true;
+        return;
+    }
+    //Сетим юзера
+    telegramUserStore.setUser(userResult.data);
+
+    //Проверяем дал ли юзера разрешение писать боту
+    if (telegramUserStore.user.status !== 'member'){
+        if (!await requestWritePermission()) {
+            isReady.value = true;
+            return;
+        } else {
+            telegramUserStore.user.status = 'member';
+        }
+    }
+
+    //Проверяем забанен ли юзер
+    if (telegramUserStore.user.is_blocked){
         isReady.value = true;
         return;
     }
@@ -66,6 +87,18 @@ onMounted(async () => {
     isReady.value = true;
 });
 
+// Преобразуем requestWriteAccess в промис, запрашиваем разрешение писать для бота
+const requestWritePermission = () => {
+    return new Promise((resolve) => {
+        // Для локального тестирования эмулируем результат
+        //resolve(false);
+        window.Telegram.WebApp.requestWriteAccess((allowed) => {
+            resolve(allowed);
+        });
+    });
+};
+
+//Загружем необходимые данные
 const loadInitialData = async () => {
     // Запускаем все запросы параллельно
     await Promise.all([
@@ -79,15 +112,6 @@ const loadInitialData = async () => {
         filterStore.fetchModels()
     ]);
 };
-
-//Проверяем данные от тг и доступ юзера
-const checkUserAccess = async (initData) => {
-    await Promise.all([
-        telegramUserStore.checkTelegramUserStatus(),
-        telegramUserStore.verifyInitialData(initData)
-    ]);
-}
-
 </script>
 
 <template>
@@ -98,7 +122,7 @@ const checkUserAccess = async (initData) => {
 
 
     <!-- Если доступ запрещен, показываем только этот блок -->
-    <AccessDenied v-if="telegramUserStore.accessDenied || !telegramUserStore.isValidData"/>
+    <AccessDenied v-if="!telegramUserStore.isValidData || telegramUserStore.user.status !== 'member' || telegramUserStore.user.is_blocked"/>
 
     <!-- Тут уже отрисуем основное приложение -->
     <div v-else v-if="isReady">
